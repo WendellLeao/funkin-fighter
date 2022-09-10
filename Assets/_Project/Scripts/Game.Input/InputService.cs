@@ -15,8 +15,10 @@ namespace Game.Input
         private PlayerInputsData _playerInputsData;
 
         [Header("Inputs")] 
-        private Vector2 _playerMovement;
-        private bool _pressInteract;
+        private bool _executeLightAttack;
+        private bool _executeHeavyAttack;
+        private bool _executeDefend;
+        private bool _executeDodge;
 
         private void Awake()
         {
@@ -51,18 +53,18 @@ namespace Game.Input
 
         private void SubscribeEvents()
         {
-            // _landActions.Movement.performed += SetPlayerMovement;
-            //
-            // _landActions.Interact.performed += HandleInteract;
-            // _landActions.Interact.canceled += HandleInteract;
+            _landActions.LightAttack.performed += HandleLightAttack;
+            _landActions.LightAttack.performed += HandleHeavyAttack;
+            _landActions.LightAttack.performed += HandleDefend;
+            _landActions.LightAttack.performed += HandleDodge;
         }
 
         private void UnsubscribeEvents()
         {
-            // _landActions.Movement.performed -= SetPlayerMovement;
-            //
-            // _landActions.Interact.performed -= HandleInteract;
-            // _landActions.Interact.canceled -= HandleInteract;
+            _landActions.LightAttack.performed -= HandleLightAttack;
+            _landActions.LightAttack.performed -= HandleHeavyAttack;
+            _landActions.LightAttack.performed -= HandleDefend;
+            _landActions.LightAttack.performed -= HandleDodge;
         }
 
         private void InitializePlayerInputs()
@@ -84,35 +86,86 @@ namespace Game.Input
 
         private void ResetInputs()
         {
-            _pressInteract = false;
+            _executeLightAttack = false;
+            _executeHeavyAttack = false;
+            _executeDefend = false;
+            _executeDodge = false;
         }
 
         private void UpdatePlayerInputsData()
         {
-            _playerInputsData.PlayerMovement = _playerMovement;
-            _playerInputsData.PressInteract = _pressInteract;
+            _playerInputsData.ExecuteLightAttack = _executeLightAttack;
+            _playerInputsData.ExecuteHeavyAttack = _executeHeavyAttack;
+            _playerInputsData.ExecuteDefend = _executeDefend;
+            _playerInputsData.ExecuteDodge = _executeDodge;
         }
 
-        private void HandleInteract(InputAction.CallbackContext context)
+        private void HandleLightAttack(InputAction.CallbackContext context)
         {
             switch (context.phase)
             {
                 case InputActionPhase.Performed:
                 {
-                    _pressInteract = true;
+                    _executeLightAttack = true;
                     break;
                 }
                 case InputActionPhase.Canceled:
                 {
-                    _pressInteract = false;
+                    _executeLightAttack = false;
                     break;
                 }
             }
         }
-
-        private void SetPlayerMovement(InputAction.CallbackContext action)
+        
+        private void HandleHeavyAttack(InputAction.CallbackContext context)
         {
-            _playerMovement = action.ReadValue<Vector2>();
+            switch (context.phase)
+            {
+                case InputActionPhase.Performed:
+                {
+                    _executeHeavyAttack = true;
+                    break;
+                }
+                case InputActionPhase.Canceled:
+                {
+                    _executeHeavyAttack = false;
+                    break;
+                }
+            }
+        }
+        
+        private void HandleDefend(InputAction.CallbackContext context)
+        {
+            switch (context.phase)
+            {
+                case InputActionPhase.Performed:
+                {
+                    _executeDefend = true;
+                    break;
+                }
+                case InputActionPhase.Canceled:
+                {
+                    _executeDefend = false;
+                    break;
+                }
+            }
+        }
+        
+        private void HandleDodge(InputAction.CallbackContext context)
+        {
+            switch (context.phase)
+            {
+                case InputActionPhase.Performed:
+                {
+                    _executeDodge = true;
+                    break;
+                }
+                case InputActionPhase.Canceled:
+                {
+                    _executeDodge = false;
+                    break;
+                }
+            }
         }
     }
 }

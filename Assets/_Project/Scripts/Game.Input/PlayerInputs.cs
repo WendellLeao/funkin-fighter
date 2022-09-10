@@ -28,9 +28,45 @@ public partial class @PlayerInputs : IInputActionCollection2, IDisposable
             ""id"": ""4facb56b-3ee2-4408-983b-4ad48960a1cc"",
             ""actions"": [
                 {
-                    ""name"": ""LandActions"",
+                    ""name"": ""LightAttack"",
                     ""type"": ""Button"",
                     ""id"": ""b2af32b6-9bc3-4343-b03e-3888678b9bb3"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""HeavyAttack"",
+                    ""type"": ""Button"",
+                    ""id"": ""b04c735f-a17f-49cd-8fba-5372b1c0a830"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Defend"",
+                    ""type"": ""Button"",
+                    ""id"": ""e266b11b-68d6-47da-a7c2-df79b15ca589"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Dodge"",
+                    ""type"": ""Button"",
+                    ""id"": ""1f2d4699-3575-4a6a-bdab-36f8a7a9f745"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""SpecialAttack"",
+                    ""type"": ""Button"",
+                    ""id"": ""d08594b3-05e3-4ae0-aa9e-75bf24723775"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """",
@@ -40,12 +76,56 @@ public partial class @PlayerInputs : IInputActionCollection2, IDisposable
             ""bindings"": [
                 {
                     ""name"": """",
-                    ""id"": ""319f82f9-d4ad-4b2c-95cf-d6ec93305f6b"",
-                    ""path"": """",
+                    ""id"": ""31a2b603-b3f6-4792-9b45-edeb3be2d707"",
+                    ""path"": ""<Keyboard>/rightArrow"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""LandActions"",
+                    ""action"": ""LightAttack"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""797bd1d5-d756-41e8-81b8-2fba49debe8d"",
+                    ""path"": ""<Keyboard>/upArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""HeavyAttack"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""9c002693-c68b-48bc-87e3-6f487783403b"",
+                    ""path"": ""<Keyboard>/leftArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Defend"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""a6697ede-3c37-4619-b039-2b68125b0e10"",
+                    ""path"": ""<Keyboard>/downArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Dodge"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""6dc5898b-1594-4eb7-ac7c-34ac6aa1fb2a"",
+                    ""path"": ""<Keyboard>/space"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""SpecialAttack"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -56,7 +136,11 @@ public partial class @PlayerInputs : IInputActionCollection2, IDisposable
 }");
         // LandMap
         m_LandMap = asset.FindActionMap("LandMap", throwIfNotFound: true);
-        m_LandMap_LandActions = m_LandMap.FindAction("LandActions", throwIfNotFound: true);
+        m_LandMap_LightAttack = m_LandMap.FindAction("LightAttack", throwIfNotFound: true);
+        m_LandMap_HeavyAttack = m_LandMap.FindAction("HeavyAttack", throwIfNotFound: true);
+        m_LandMap_Defend = m_LandMap.FindAction("Defend", throwIfNotFound: true);
+        m_LandMap_Dodge = m_LandMap.FindAction("Dodge", throwIfNotFound: true);
+        m_LandMap_SpecialAttack = m_LandMap.FindAction("SpecialAttack", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -116,12 +200,20 @@ public partial class @PlayerInputs : IInputActionCollection2, IDisposable
     // LandMap
     private readonly InputActionMap m_LandMap;
     private ILandMapActions m_LandMapActionsCallbackInterface;
-    private readonly InputAction m_LandMap_LandActions;
+    private readonly InputAction m_LandMap_LightAttack;
+    private readonly InputAction m_LandMap_HeavyAttack;
+    private readonly InputAction m_LandMap_Defend;
+    private readonly InputAction m_LandMap_Dodge;
+    private readonly InputAction m_LandMap_SpecialAttack;
     public struct LandMapActions
     {
         private @PlayerInputs m_Wrapper;
         public LandMapActions(@PlayerInputs wrapper) { m_Wrapper = wrapper; }
-        public InputAction @LandActions => m_Wrapper.m_LandMap_LandActions;
+        public InputAction @LightAttack => m_Wrapper.m_LandMap_LightAttack;
+        public InputAction @HeavyAttack => m_Wrapper.m_LandMap_HeavyAttack;
+        public InputAction @Defend => m_Wrapper.m_LandMap_Defend;
+        public InputAction @Dodge => m_Wrapper.m_LandMap_Dodge;
+        public InputAction @SpecialAttack => m_Wrapper.m_LandMap_SpecialAttack;
         public InputActionMap Get() { return m_Wrapper.m_LandMap; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -131,22 +223,50 @@ public partial class @PlayerInputs : IInputActionCollection2, IDisposable
         {
             if (m_Wrapper.m_LandMapActionsCallbackInterface != null)
             {
-                @LandActions.started -= m_Wrapper.m_LandMapActionsCallbackInterface.OnLandActions;
-                @LandActions.performed -= m_Wrapper.m_LandMapActionsCallbackInterface.OnLandActions;
-                @LandActions.canceled -= m_Wrapper.m_LandMapActionsCallbackInterface.OnLandActions;
+                @LightAttack.started -= m_Wrapper.m_LandMapActionsCallbackInterface.OnLightAttack;
+                @LightAttack.performed -= m_Wrapper.m_LandMapActionsCallbackInterface.OnLightAttack;
+                @LightAttack.canceled -= m_Wrapper.m_LandMapActionsCallbackInterface.OnLightAttack;
+                @HeavyAttack.started -= m_Wrapper.m_LandMapActionsCallbackInterface.OnHeavyAttack;
+                @HeavyAttack.performed -= m_Wrapper.m_LandMapActionsCallbackInterface.OnHeavyAttack;
+                @HeavyAttack.canceled -= m_Wrapper.m_LandMapActionsCallbackInterface.OnHeavyAttack;
+                @Defend.started -= m_Wrapper.m_LandMapActionsCallbackInterface.OnDefend;
+                @Defend.performed -= m_Wrapper.m_LandMapActionsCallbackInterface.OnDefend;
+                @Defend.canceled -= m_Wrapper.m_LandMapActionsCallbackInterface.OnDefend;
+                @Dodge.started -= m_Wrapper.m_LandMapActionsCallbackInterface.OnDodge;
+                @Dodge.performed -= m_Wrapper.m_LandMapActionsCallbackInterface.OnDodge;
+                @Dodge.canceled -= m_Wrapper.m_LandMapActionsCallbackInterface.OnDodge;
+                @SpecialAttack.started -= m_Wrapper.m_LandMapActionsCallbackInterface.OnSpecialAttack;
+                @SpecialAttack.performed -= m_Wrapper.m_LandMapActionsCallbackInterface.OnSpecialAttack;
+                @SpecialAttack.canceled -= m_Wrapper.m_LandMapActionsCallbackInterface.OnSpecialAttack;
             }
             m_Wrapper.m_LandMapActionsCallbackInterface = instance;
             if (instance != null)
             {
-                @LandActions.started += instance.OnLandActions;
-                @LandActions.performed += instance.OnLandActions;
-                @LandActions.canceled += instance.OnLandActions;
+                @LightAttack.started += instance.OnLightAttack;
+                @LightAttack.performed += instance.OnLightAttack;
+                @LightAttack.canceled += instance.OnLightAttack;
+                @HeavyAttack.started += instance.OnHeavyAttack;
+                @HeavyAttack.performed += instance.OnHeavyAttack;
+                @HeavyAttack.canceled += instance.OnHeavyAttack;
+                @Defend.started += instance.OnDefend;
+                @Defend.performed += instance.OnDefend;
+                @Defend.canceled += instance.OnDefend;
+                @Dodge.started += instance.OnDodge;
+                @Dodge.performed += instance.OnDodge;
+                @Dodge.canceled += instance.OnDodge;
+                @SpecialAttack.started += instance.OnSpecialAttack;
+                @SpecialAttack.performed += instance.OnSpecialAttack;
+                @SpecialAttack.canceled += instance.OnSpecialAttack;
             }
         }
     }
     public LandMapActions @LandMap => new LandMapActions(this);
     public interface ILandMapActions
     {
-        void OnLandActions(InputAction.CallbackContext context);
+        void OnLightAttack(InputAction.CallbackContext context);
+        void OnHeavyAttack(InputAction.CallbackContext context);
+        void OnDefend(InputAction.CallbackContext context);
+        void OnDodge(InputAction.CallbackContext context);
+        void OnSpecialAttack(InputAction.CallbackContext context);
     }
 }

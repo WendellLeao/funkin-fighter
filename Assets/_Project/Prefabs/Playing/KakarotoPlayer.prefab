@@ -7,9 +7,13 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 181897431494559276, guid: eb9948ab6b8487b498ad6ee07b716d25, type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: bd054c80763f7934bbd4a8b37c0eb546, type: 2}
     - target: {fileID: 3464365295539642728, guid: eb9948ab6b8487b498ad6ee07b716d25, type: 3}
       propertyPath: m_Name
-      value: Player
+      value: KakarotoPlayer
       objectReference: {fileID: 0}
     - target: {fileID: 3464365295539642730, guid: eb9948ab6b8487b498ad6ee07b716d25, type: 3}
       propertyPath: m_RootOrder

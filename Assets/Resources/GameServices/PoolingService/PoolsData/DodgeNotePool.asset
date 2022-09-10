@@ -1,0 +1,17 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c9f71fbee99a96048a4ce89163601ddf, type: 3}
+  m_Name: DodgeNotePool
+  m_EditorClassIdentifier: 
+  PoolType: 4
+  ObjectToPool: {fileID: 7023217468957175521, guid: 4d11a1d5fe4f8104d9a8dfe75dbf27d1, type: 3}
+  StartAmount: 10
