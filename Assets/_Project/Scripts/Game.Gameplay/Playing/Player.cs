@@ -48,7 +48,12 @@ namespace Game.Gameplay.Playing
                 return;
             }
 
-            CheckExecution(_currentNote.Data.Type);
+            if (_currentNote.HasExecuted)
+            {
+                return;
+            }
+            
+            CheckNoteExecution(_currentNote);
         }
 
         private void SubscribeEvents()
@@ -99,20 +104,13 @@ namespace Game.Gameplay.Playing
             }
         }
         
-        private void HandleInputExecution(Note note, bool hasCorrectlyHit)
+        private void CheckNoteExecution(Note note)
         {
-            note.Execute(hasCorrectlyHit);
-            
-            _eventService.DispatchEvent(new InputExecutedEvent(this, note, hasCorrectlyHit));
-        }
-
-        private void CheckExecution(NoteType noteType)
-        {
-            switch (noteType)
+            switch (note.Data.Type)
             {
                 case NoteType.LightAttack:
                 {
-                    HandleInputExecution(_currentNote, _playerInputsData.ExecuteLightAttack);
+                    HandleInputExecution(note, _playerInputsData.ExecuteLightAttack);
 
                     if (_playerInputsData.ExecuteLightAttack)
                     {
@@ -123,7 +121,7 @@ namespace Game.Gameplay.Playing
                 }
                 case NoteType.HeavyAttack:
                 {
-                    HandleInputExecution(_currentNote, _playerInputsData.ExecuteHeavyAttack);
+                    HandleInputExecution(note, _playerInputsData.ExecuteHeavyAttack);
 
                     if (_playerInputsData.ExecuteHeavyAttack)
                     {
@@ -134,7 +132,7 @@ namespace Game.Gameplay.Playing
                 }
                 case NoteType.Defend:
                 {
-                    HandleInputExecution(_currentNote, _playerInputsData.ExecuteDefend);
+                    HandleInputExecution(note, _playerInputsData.ExecuteDefend);
 
                     if (_playerInputsData.ExecuteDefend)
                     {
@@ -145,7 +143,7 @@ namespace Game.Gameplay.Playing
                 }
                 case NoteType.Dodge:
                 {
-                    HandleInputExecution(_currentNote, _playerInputsData.ExecuteDodge);
+                    HandleInputExecution(note, _playerInputsData.ExecuteDodge);
 
                     if (_playerInputsData.ExecuteDodge)
                     {
@@ -155,6 +153,13 @@ namespace Game.Gameplay.Playing
                     break;
                 }
             }
+        }
+        
+        private void HandleInputExecution(Note note, bool hasCorrectlyHit)
+        {
+            note.Execute(hasCorrectlyHit);
+            
+            _eventService.DispatchEvent(new InputExecutedEvent(this, note, hasCorrectlyHit));
         }
         
         private bool HasExecutedInput()

@@ -23,7 +23,8 @@ namespace Game.Gameplay.Notes
             _hasEnteredExecutionArea = false;
             _hasExecuted = false;
             
-            _rectTransform.DOMoveY(_data.EndValue, _data.Duration).OnComplete(OnComplete);
+            // _rectTransform.DOMoveY(_data.EndValue, _data.Duration).OnComplete(OnComplete);
+            _rectTransform.DOMoveY(_data.EndValue, _data.Duration);
         }
 
         public virtual void Stop()
