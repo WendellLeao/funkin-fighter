@@ -22,9 +22,9 @@ namespace Game.Gameplay.Notes
             _poolingService = ServiceLocator.GetService<IPoolingService>();
             _eventService = ServiceLocator.GetService<IEventService>();
             
-            _spawnRoutine = StartCoroutine(SpawnNotesRoutine());
-            
             _notesArea.Initialize(_eventService);
+
+            _spawnRoutine = StartCoroutine(SpawnNotesRoutine());
         }
 
         public void Dispose()

@@ -95,7 +95,7 @@ namespace Game.Gameplay.Playing
                 
                 if (!note.HasExecuted)
                 {
-                    Debug.Log("<color=red>Perdeu a nota</color>");
+                    Debug.Log($"<color=red>Perdeu a nota: {note.Data.Type}</color>");
                 }
                 
                 _mustExecuteInput = false;
@@ -114,7 +114,7 @@ namespace Game.Gameplay.Playing
 
                     if (_playerInputsData.ExecuteLightAttack)
                     {
-                        Debug.Log($"<color=green>Acertou a nota: {NoteType.LightAttack}</color>");
+                        Debug.Log($"<color=green>Acertou a nota: <color=lime><b>{NoteType.LightAttack}</b></color></color>");
                     }
                     
                     break;
@@ -125,7 +125,7 @@ namespace Game.Gameplay.Playing
 
                     if (_playerInputsData.ExecuteHeavyAttack)
                     {
-                        Debug.Log($"<color=green>Acertou a nota: {NoteType.HeavyAttack}</color>");
+                        Debug.Log($"<color=green>Acertou a nota: <color=lime><b>{NoteType.HeavyAttack}</b></color></color>");
                     }
                     
                     break;
@@ -136,7 +136,7 @@ namespace Game.Gameplay.Playing
 
                     if (_playerInputsData.ExecuteDefend)
                     {
-                        Debug.Log($"<color=green>Acertou a nota: {NoteType.Defend}</color>");
+                        Debug.Log($"<color=green>Acertou a nota: <color=lime><b>{NoteType.Defend}</b></color></color>");
                     }
                     
                     break;
@@ -147,7 +147,7 @@ namespace Game.Gameplay.Playing
 
                     if (_playerInputsData.ExecuteDodge)
                     {
-                        Debug.Log($"<color=green>Acertou a nota: {NoteType.Dodge}</color>");
+                        Debug.Log($"<color=green>Acertou a nota: <color=lime><b>{NoteType.Dodge}</b></color></color>");
                     }
                     
                     break;

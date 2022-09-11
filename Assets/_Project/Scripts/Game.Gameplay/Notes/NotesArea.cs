@@ -14,7 +14,7 @@ namespace Game.Gameplay.Notes
         [SerializeField] private float _maximumExecutionAreaValue;
 
         private IEventService _eventService;
-        private List<Note> _notes = new List<Note>();
+        private List<Note> _notes;
 
         public Vector3 DefendSpawnPoint => _defendSpawnPoint.position;
         public Vector3 DodgeSpawnPoint => _dodgeSpawnPoint.position;
@@ -24,6 +24,8 @@ namespace Game.Gameplay.Notes
         public void Initialize(IEventService eventService)
         {
             _eventService = eventService;
+
+            _notes = new List<Note>();
         }
 
         public void Tick(float deltaTime)
@@ -41,8 +43,6 @@ namespace Game.Gameplay.Notes
 
                     _eventService.DispatchEvent(new NoteEnterExecuteAreaEvent(note));
                     
-                    // Debug.Log("<color=green>Has entered area</color>");
-                    
                     continue;
                 }
                 
@@ -51,8 +51,6 @@ namespace Game.Gameplay.Notes
                     note.ExitExecutionArea();
                         
                     _eventService.DispatchEvent(new NoteExitExecuteAreaEvent(note));
-                        
-                    // Debug.Log("<color=red>Has exit area</color>");
                 }
             }
         }
