@@ -54,17 +54,17 @@ namespace Game.Input
         private void SubscribeEvents()
         {
             _landActions.LightAttack.performed += HandleLightAttack;
-            _landActions.LightAttack.performed += HandleHeavyAttack;
-            _landActions.LightAttack.performed += HandleDefend;
-            _landActions.LightAttack.performed += HandleDodge;
+            _landActions.HeavyAttack.performed += HandleHeavyAttack;
+            _landActions.Defend.performed += HandleDefend;
+            _landActions.Dodge.performed += HandleDodge;
         }
 
         private void UnsubscribeEvents()
         {
             _landActions.LightAttack.performed -= HandleLightAttack;
-            _landActions.LightAttack.performed -= HandleHeavyAttack;
-            _landActions.LightAttack.performed -= HandleDefend;
-            _landActions.LightAttack.performed -= HandleDodge;
+            _landActions.HeavyAttack.performed -= HandleHeavyAttack;
+            _landActions.Defend.performed -= HandleDefend;
+            _landActions.Dodge.performed -= HandleDodge;
         }
 
         private void InitializePlayerInputs()

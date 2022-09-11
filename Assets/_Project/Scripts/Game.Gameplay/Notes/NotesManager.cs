@@ -1,15 +1,13 @@
 ﻿using System.Collections;
-using Codice.CM.Common;
-using Game.Events;
-using Game.Pooling;
 using Game.Services;
+using Game.Pooling;
+using Game.Events;
 using UnityEngine;
 
 namespace Game.Gameplay.Notes
 {
     public sealed class NotesManager : MonoBehaviour
     {
-        [Header("UI")] 
         [SerializeField] private Note[] _notes;
         [SerializeField] private NotesArea _notesArea;
         [SerializeField] private float _spawnNotesRate;
@@ -46,8 +44,6 @@ namespace Game.Gameplay.Notes
 
         private IEnumerator SpawnNotesRoutine()
         {
-            yield return new WaitForSeconds(_spawnNotesRate);
-
             Note note = SpawnRandomNote();
 
             _notesArea.AddNote(note);
@@ -55,6 +51,8 @@ namespace Game.Gameplay.Notes
             CheckAndSetNotePosition(note);
             
             note.Begin();
+            
+            yield return new WaitForSeconds(_spawnNotesRate);
             
             _spawnRoutine = StartCoroutine(SpawnNotesRoutine());
         }

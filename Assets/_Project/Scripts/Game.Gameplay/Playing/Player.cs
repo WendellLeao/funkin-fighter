@@ -5,32 +5,35 @@ using Game.Input;
 
 namespace Game.Gameplay.Playing
 {
-    public sealed class Player : Entity
+    public sealed class Player : Entity, INoteExecutor
     {
+        [Header("Controllers")]
+        [SerializeField] private HealthController _healthController;
+        [SerializeField] private DamageController _damageController;
+
+        private PlayerInputsData _playerInputsData;
         private IEventService _eventService;
         private IInputService _inputService;
-        private PlayerInputsData _playerInputsData;
         private bool _mustExecuteInput;
-        private bool _hasExecuteInput;
         private Note _currentNote;
 
         public void Begin(IEventService eventService, IInputService inputService)
         {
             _eventService = eventService;
             _inputService = inputService;
-            
-            _inputService.OnReadPlayerInputs += HandlePlayerInputs;
-            
-            _eventService.AddEventListener<NoteEnterExecuteAreaEvent>(HandleNoteEnterExecuteArea);
-            _eventService.AddEventListener<NoteExitExecuteAreaEvent>(HandleNoteExitExecuteArea);
+
+            _healthController.Initialize();
+            _damageController.Initialize(this, _eventService, _healthController);
+
+            SubscribeEvents();
         }
 
         public void Stop()
         {
-            _inputService.OnReadPlayerInputs -= HandlePlayerInputs;
+            _healthController.Dispose();
+            _damageController.Dispose();
             
-            _eventService.RemoveEventListener<NoteEnterExecuteAreaEvent>(HandleNoteEnterExecuteArea);
-            _eventService.RemoveEventListener<NoteExitExecuteAreaEvent>(HandleNoteExitExecuteArea);
+            UnsubscribeEvents();
         }
 
         public void Tick(float deltaTime)
@@ -39,36 +42,31 @@ namespace Game.Gameplay.Playing
             {
                 return;
             }
-            
-            switch (_currentNote.Data.Type)
+
+            if (!HasExecutedInput())
             {
-                case NoteType.LightAttack:
-                {
-                    HandleInputExecution(_playerInputsData.ExecuteLightAttack);
-
-                    break;
-                }
-                case NoteType.HeavyAttack:
-                {
-                    HandleInputExecution(_playerInputsData.ExecuteHeavyAttack);
-
-                    break;
-                }
-                case NoteType.Defend:
-                {
-                    HandleInputExecution(_playerInputsData.ExecuteDefend);
-
-                    break;
-                }
-                case NoteType.Dodge:
-                {
-                    HandleInputExecution(_playerInputsData.ExecuteDodge);
-
-                    break;
-                }
+                return;
             }
+
+            CheckExecution(_currentNote.Data.Type);
         }
 
+        private void SubscribeEvents()
+        {
+            _inputService.OnReadPlayerInputs += HandlePlayerInputs;
+            
+            _eventService.AddEventListener<NoteEnterExecuteAreaEvent>(HandleNoteEnterExecuteArea);
+            _eventService.AddEventListener<NoteExitExecuteAreaEvent>(HandleNoteExitExecuteArea);
+        }
+        
+        private void UnsubscribeEvents()
+        {
+            _inputService.OnReadPlayerInputs -= HandlePlayerInputs;
+            
+            _eventService.RemoveEventListener<NoteEnterExecuteAreaEvent>(HandleNoteEnterExecuteArea);
+            _eventService.RemoveEventListener<NoteExitExecuteAreaEvent>(HandleNoteExitExecuteArea);
+        }
+        
         private void HandlePlayerInputs(PlayerInputsData playerInputs)
         {
             _playerInputsData = playerInputs;
@@ -88,33 +86,100 @@ namespace Game.Gameplay.Playing
         {
             if (serviceEvent is NoteExitExecuteAreaEvent noteExitExecuteAreaEvent)
             {
-                if (!_hasExecuteInput)
+                Note note = noteExitExecuteAreaEvent.Note;
+                
+                if (!note.HasExecuted)
                 {
-                    Debug.Log("<color=red>ERROU a nota</color>");
+                    Debug.Log("<color=red>Perdeu a nota</color>");
                 }
                 
                 _mustExecuteInput = false;
                     
-                _hasExecuteInput = false;
-
                 _currentNote = null;
             }
         }
-
-        private void HandleInputExecution(bool hasCorrectlyHit)
-        {
-            _hasExecuteInput = true;
-            
-            _eventService.DispatchEvent(new InputExecutionEvent(hasCorrectlyHit));
-            
-            if (hasCorrectlyHit)
-            {
-                Debug.Log("<color=green>Acertou a nota</color>");
-                
-                return;
-            }
         
-            Debug.Log("<color=red>ERROU a nota</color>");
+        private void HandleInputExecution(Note note, bool hasCorrectlyHit)
+        {
+            note.Execute(hasCorrectlyHit);
+            
+            _eventService.DispatchEvent(new InputExecutedEvent(this, note, hasCorrectlyHit));
+        }
+
+        private void CheckExecution(NoteType noteType)
+        {
+            switch (noteType)
+            {
+                case NoteType.LightAttack:
+                {
+                    HandleInputExecution(_currentNote, _playerInputsData.ExecuteLightAttack);
+
+                    if (_playerInputsData.ExecuteLightAttack)
+                    {
+                        Debug.Log($"<color=green>Acertou a nota: {NoteType.LightAttack}</color>");
+                    }
+                    
+                    break;
+                }
+                case NoteType.HeavyAttack:
+                {
+                    HandleInputExecution(_currentNote, _playerInputsData.ExecuteHeavyAttack);
+
+                    if (_playerInputsData.ExecuteHeavyAttack)
+                    {
+                        Debug.Log($"<color=green>Acertou a nota: {NoteType.HeavyAttack}</color>");
+                    }
+                    
+                    break;
+                }
+                case NoteType.Defend:
+                {
+                    HandleInputExecution(_currentNote, _playerInputsData.ExecuteDefend);
+
+                    if (_playerInputsData.ExecuteDefend)
+                    {
+                        Debug.Log($"<color=green>Acertou a nota: {NoteType.Defend}</color>");
+                    }
+                    
+                    break;
+                }
+                case NoteType.Dodge:
+                {
+                    HandleInputExecution(_currentNote, _playerInputsData.ExecuteDodge);
+
+                    if (_playerInputsData.ExecuteDodge)
+                    {
+                        Debug.Log($"<color=green>Acertou a nota: {NoteType.Dodge}</color>");
+                    }
+                    
+                    break;
+                }
+            }
+        }
+        
+        private bool HasExecutedInput()
+        {
+            if (_playerInputsData.ExecuteLightAttack)
+            {
+                return true;
+            }
+            
+            if (_playerInputsData.ExecuteHeavyAttack)
+            {
+                return true;
+            }
+            
+            if (_playerInputsData.ExecuteDefend)
+            {
+                return true;
+            }
+            
+            if (_playerInputsData.ExecuteDodge)
+            {
+                return true;
+            }
+
+            return false;
         }
     }
 }

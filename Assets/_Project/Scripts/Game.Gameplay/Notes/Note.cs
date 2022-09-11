@@ -10,12 +10,19 @@ namespace Game.Gameplay.Notes
         [SerializeField] private NoteData _data;
         
         private IPoolingService _poolingService;
+        private bool _hasEnteredExecutionArea;
+        private bool _hasExecuted;
 
-        public Vector2 AnchoredPosition => _rectTransform.anchoredPosition;
         public NoteData Data => _data;
+        public Vector2 AnchoredPosition => _rectTransform.anchoredPosition;
+        public bool HasEnteredExecutionArea => _hasEnteredExecutionArea;
+        public bool HasExecuted => _hasExecuted;
 
         public virtual void Begin()
         {
+            _hasEnteredExecutionArea = false;
+            _hasExecuted = false;
+            
             _rectTransform.DOMoveY(_data.EndValue, _data.Duration).OnComplete(OnComplete);
         }
 
@@ -25,13 +32,26 @@ namespace Game.Gameplay.Notes
         public virtual void Tick(float deltaTime)
         { }
 
-        protected abstract void Execute();
+        public virtual void EnterExecutionArea()
+        {
+            _hasEnteredExecutionArea = true;
+        }
+        
+        public virtual void ExitExecutionArea()
+        {
+            _hasEnteredExecutionArea = false;
+        }
+        
+        public virtual void Execute(bool hasCorrectlyHit)
+        {
+            _hasExecuted = true;
+        }
         
         protected virtual void OnComplete()
         {
             _poolingService.ReturnObjectToPool(_data.PoolType, gameObject);
         }
-
+        
         public void SetPosition(Vector3 position)
         {
             _rectTransform.position = position;

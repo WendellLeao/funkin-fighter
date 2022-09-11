@@ -6,14 +6,13 @@ namespace Game.Gameplay.Notes
 {
     public sealed class NotesArea : MonoBehaviour
     {
-        [SerializeField] private float _minimumExecutionAreaValue;
-        [SerializeField] private float _maximumExecutionAreaValue;
         [SerializeField] private Transform _defendSpawnPoint;
         [SerializeField] private Transform _dodgeSpawnPoint;
         [SerializeField] private Transform _lightAttackSpawnPoint;
         [SerializeField] private Transform _heavyAttackSpawnPoint;
+        [SerializeField] private float _minimumExecutionAreaValue;
+        [SerializeField] private float _maximumExecutionAreaValue;
 
-        private bool _noteHasEntered;
         private IEventService _eventService;
         private List<Note> _notes = new List<Note>();
 
@@ -29,30 +28,32 @@ namespace Game.Gameplay.Notes
 
         public void Tick(float deltaTime)
         {
-            for (int i = 0; i < _notes.Count; i++)
+            foreach (Note note in _notes)
             {
-                Note note = _notes[i];
-
-                if (note == null)
+                if (IsUnderExecutionArea(note))
                 {
-                    continue;
-                }
-
-                if (!IsUnderExecutionArea(note))
-                {
-                    if (_noteHasEntered)
+                    if (note.HasEnteredExecutionArea)
                     {
-                        _eventService.DispatchEvent(new NoteEnterExecuteAreaEvent(note));
-
-                        _noteHasEntered = false;
+                        continue;
                     }
+                    
+                    note.EnterExecutionArea();
+
+                    _eventService.DispatchEvent(new NoteEnterExecuteAreaEvent(note));
+                    
+                    // Debug.Log("<color=green>Has entered area</color>");
                     
                     continue;
                 }
-
-                _eventService.DispatchEvent(new NoteEnterExecuteAreaEvent(note));
-
-                _noteHasEntered = true;
+                
+                if (note.HasEnteredExecutionArea)
+                {
+                    note.ExitExecutionArea();
+                        
+                    _eventService.DispatchEvent(new NoteExitExecuteAreaEvent(note));
+                        
+                    // Debug.Log("<color=red>Has exit area</color>");
+                }
             }
         }
 
