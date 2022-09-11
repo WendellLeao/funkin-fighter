@@ -68,5 +68,10 @@ namespace Game.Gameplay.Notes
         {
             _notes.Add(note);
         }
+
+        public void RemoveNote(Note note)
+        {
+            _notes.Remove(note);
+        }
     }
 }

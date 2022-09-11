@@ -1,11 +1,14 @@
 ﻿using Game.Pooling;
 using DG.Tweening;
 using UnityEngine;
+using System;
 
 namespace Game.Gameplay.Notes
 {
     public abstract class Note : Entity
     {
+        public event Action<Note> OnNoteExecuted;
+
         [SerializeField] private RectTransform _rectTransform;
         [SerializeField] private NoteData _data;
         
@@ -18,8 +21,10 @@ namespace Game.Gameplay.Notes
         public bool HasEnteredExecutionArea => _hasEnteredExecutionArea;
         public bool HasExecuted => _hasExecuted;
 
-        public virtual void Begin()
+        public void Begin(IPoolingService poolingService)
         {
+            _poolingService = poolingService;
+            
             _hasEnteredExecutionArea = false;
             _hasExecuted = false;
             
@@ -46,6 +51,10 @@ namespace Game.Gameplay.Notes
         public virtual void Execute(bool hasCorrectlyHit)
         {
             _hasExecuted = true;
+            
+            OnNoteExecuted?.Invoke(this);
+            
+            Destroy(gameObject);
         }
         
         protected virtual void OnComplete()

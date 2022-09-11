@@ -46,11 +46,13 @@ namespace Game.Gameplay.Notes
         {
             Note note = SpawnRandomNote();
 
+            note.OnNoteExecuted += HandleNoteExecuted;
+            
             _notesArea.AddNote(note);
             
             CheckAndSetNotePosition(note);
             
-            note.Begin();
+            note.Begin(_poolingService);
             
             yield return new WaitForSeconds(_spawnNotesRate);
             
@@ -113,6 +115,13 @@ namespace Game.Gameplay.Notes
             } 
             
             note.SetPosition(targetPosition);
+        }
+
+        private void HandleNoteExecuted(Note note)
+        {
+            note.OnNoteExecuted -= HandleNoteExecuted;
+
+            _notesArea.RemoveNote(note);
         }
     }
 }
