@@ -17,6 +17,8 @@ namespace Game.Gameplay.Playing
         private bool _mustExecuteInput;
         private Note _currentNote;
 
+        public HealthController HealthController => _healthController;
+
         public void Begin(IEventService eventService, IInputService inputService)
         {
             _eventService = eventService;
@@ -38,17 +40,7 @@ namespace Game.Gameplay.Playing
 
         public void Tick(float deltaTime)
         {
-            if (!_mustExecuteInput)
-            {
-                return;
-            }
-
-            if (!HasExecutedInput())
-            {
-                return;
-            }
-
-            if (_currentNote.HasExecuted)
+            if (!CanExecuteNote(_currentNote))
             {
                 return;
             }
@@ -114,7 +106,7 @@ namespace Game.Gameplay.Playing
 
                     if (_playerInputsData.ExecuteLightAttack)
                     {
-                        Debug.Log($"<color=green>Acertou a nota: <color=lime><b>{NoteType.LightAttack}</b></color></color>");
+                        //Debug.Log($"<color=green>Acertou a nota: <color=lime><b>{NoteType.LightAttack}</b></color></color>");
                     }
                     
                     break;
@@ -125,7 +117,7 @@ namespace Game.Gameplay.Playing
 
                     if (_playerInputsData.ExecuteHeavyAttack)
                     {
-                        Debug.Log($"<color=green>Acertou a nota: <color=lime><b>{NoteType.HeavyAttack}</b></color></color>");
+                        //Debug.Log($"<color=green>Acertou a nota: <color=lime><b>{NoteType.HeavyAttack}</b></color></color>");
                     }
                     
                     break;
@@ -136,7 +128,7 @@ namespace Game.Gameplay.Playing
 
                     if (_playerInputsData.ExecuteDefend)
                     {
-                        Debug.Log($"<color=green>Acertou a nota: <color=lime><b>{NoteType.Defend}</b></color></color>");
+                        //Debug.Log($"<color=green>Acertou a nota: <color=lime><b>{NoteType.Defend}</b></color></color>");
                     }
                     
                     break;
@@ -147,7 +139,7 @@ namespace Game.Gameplay.Playing
 
                     if (_playerInputsData.ExecuteDodge)
                     {
-                        Debug.Log($"<color=green>Acertou a nota: <color=lime><b>{NoteType.Dodge}</b></color></color>");
+                        //Debug.Log($"<color=green>Acertou a nota: <color=lime><b>{NoteType.Dodge}</b></color></color>");
                     }
                     
                     break;
@@ -160,6 +152,33 @@ namespace Game.Gameplay.Playing
             note.Execute(hasCorrectlyHit);
             
             _eventService.DispatchEvent(new InputExecutedEvent(this, note, hasCorrectlyHit));
+        }
+
+        private bool CanExecuteNote(Note currentNote)
+        {
+            if (!_mustExecuteInput)
+            {
+                return false;
+            }
+
+            Player noteExecutor = (Player) currentNote.NoteExecutor;
+            
+            if (noteExecutor != this)
+            {
+                return false;
+            }
+
+            if (!HasExecutedInput())
+            {
+                return false;
+            }
+
+            if (currentNote.HasExecuted)
+            {
+                return false;
+            }
+
+            return true;
         }
         
         private bool HasExecutedInput()

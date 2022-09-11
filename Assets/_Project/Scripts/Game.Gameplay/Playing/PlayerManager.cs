@@ -8,6 +8,9 @@ namespace Game.Gameplay.Playing
     public sealed class PlayerManager : MonoBehaviour
     {
         [SerializeField] private Player _player;
+        [SerializeField] private Player _playerBot;
+
+        public Player Player => _player;
 
         public void Initialize()
         {
@@ -15,6 +18,7 @@ namespace Game.Gameplay.Playing
             IInputService inputService = ServiceLocator.GetService<IInputService>();
             
             _player.Begin(eventService, inputService);
+            _playerBot.Begin(eventService, inputService);
         }
 
         public void Dispose()

@@ -5,9 +5,12 @@ namespace Game.Gameplay.Playing
 {
     public sealed class HealthController : MonoBehaviour
     {
-        [SerializeField] private float _maxHealth;
+        public event Action<float, float> OnHealthChanged;
+        
+        [SerializeField, Range(0f, 100f)] private float _maxHealth;
 
         private float _currentHealth;
+        private float _shield;
 
         public void Initialize()
         {
@@ -22,6 +25,8 @@ namespace Game.Gameplay.Playing
             _currentHealth += amount;
 
             _currentHealth = Math.Clamp(_currentHealth, 0, _maxHealth);
+
+            OnHealthChanged?.Invoke(_currentHealth, _maxHealth);
         }
 
         public void Remove(float amount)
@@ -29,6 +34,8 @@ namespace Game.Gameplay.Playing
             _currentHealth -= amount;
             
             _currentHealth = Math.Clamp(_currentHealth, 0, _maxHealth);
+            
+            OnHealthChanged?.Invoke(_currentHealth, _maxHealth);
         }
     }
 }

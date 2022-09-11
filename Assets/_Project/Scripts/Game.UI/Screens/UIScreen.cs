@@ -8,11 +8,11 @@ namespace Game.UI.Screens
     {
         public event Action<UIScreen> OnClosed;
         
-        private IUIService _uiService;
+        private IScreenService _screenService;
         private bool _isOpen;
 
         public bool IsOpen => _isOpen;
-        protected IUIService UIService => _uiService;
+        protected IScreenService ScreenService => _screenService;
 
         public void Close()
         {
@@ -44,7 +44,7 @@ namespace Game.UI.Screens
         
         protected virtual void OnDestroy()
         {
-            _uiService.UnregisterScreen(this);
+            _screenService.UnregisterScreen(this);
         }
 
         protected void DispatchClosedEvent()
@@ -54,9 +54,9 @@ namespace Game.UI.Screens
         
         private void Awake()
         {
-            _uiService = ServiceLocator.GetService<IUIService>();
+            _screenService = ServiceLocator.GetService<IScreenService>();
             
-            _uiService.RegisterScreen(this);
+            _screenService.RegisterScreen(this);
             
             gameObject.SetActive(false);
             

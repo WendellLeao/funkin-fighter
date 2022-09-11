@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace Game.UI
 {
-    public sealed class UIService : MonoBehaviour, IUIService
+    public sealed class ScreenService : MonoBehaviour, IScreenService
     {
         [SerializeField] private LoadingScreen _loadingScreen;
         
@@ -161,14 +161,14 @@ namespace Game.UI
 
         private void Awake()
         {
-            ServiceLocator.RegisterService<IUIService>(this);
+            ServiceLocator.RegisterService<IScreenService>(this);
             
             DontDestroyOnLoad(gameObject);
         }
 
         private void OnDestroy()
         {
-            ServiceLocator.DeregisterService<IUIService>();
+            ServiceLocator.DeregisterService<IScreenService>();
         }
     }
 }

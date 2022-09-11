@@ -9,10 +9,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: af6ad9f4544b42ef9ffc24a00225bb91, type: 3}
+  m_Script: {fileID: 11500000, guid: 1a1dd9e012a04ccba3808b63809966e9, type: 3}
   m_Name: LightAttackNote
   m_EditorClassIdentifier: 
   Type: 0
   PoolType: 1
   Duration: 9
   EndValue: -50
+  Damage: 3

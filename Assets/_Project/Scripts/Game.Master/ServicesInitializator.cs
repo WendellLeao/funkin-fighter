@@ -29,7 +29,7 @@ namespace Game.Master
                 InitializeAudioService();
             }
 
-            if (ServiceLocator.GetService<IUIService>() == null)
+            if (ServiceLocator.GetService<IScreenService>() == null)
             {
                 InitializeUIService();
             }

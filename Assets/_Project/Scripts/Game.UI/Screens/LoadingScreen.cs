@@ -39,14 +39,14 @@ namespace Game.UI.Screens
         {
             base.SubscribeEvents();
             
-            _loadingBarController.OnProgressBarFilled += UIService.CloseTopScreen;
+            _loadingBarController.OnProgressBarFilled += ScreenService.CloseTopScreen;
         }
 
         protected override void UnsubscribeEvents()
         {
             base.UnsubscribeEvents();
             
-            _loadingBarController.OnProgressBarFilled -= UIService.CloseTopScreen;
+            _loadingBarController.OnProgressBarFilled -= ScreenService.CloseTopScreen;
         }
         
         private void HandleFadeCompleted()

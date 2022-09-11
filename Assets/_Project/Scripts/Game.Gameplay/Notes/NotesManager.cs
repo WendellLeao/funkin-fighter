@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using Game.Gameplay.Playing;
+using System.Collections;
 using Game.Services;
 using Game.Pooling;
 using Game.Events;
@@ -14,11 +15,14 @@ namespace Game.Gameplay.Notes
 
         private IPoolingService _poolingService;
         private IEventService _eventService;
+        private INoteExecutor _noteExecutor;
         private Coroutine _spawnRoutine;
         private int _lastRandomIndex;
 
-        public void Initialize()
+        public void Initialize(INoteExecutor noteExecutor)
         {
+            _noteExecutor = noteExecutor;
+            
             _poolingService = ServiceLocator.GetService<IPoolingService>();
             _eventService = ServiceLocator.GetService<IEventService>();
             
@@ -46,6 +50,8 @@ namespace Game.Gameplay.Notes
         {
             Note note = SpawnRandomNote();
 
+            note.SetExecutor(_noteExecutor);
+            
             note.OnNoteExecuted += HandleNoteExecuted;
             
             _notesArea.AddNote(note);
@@ -119,8 +125,10 @@ namespace Game.Gameplay.Notes
 
         private void HandleNoteExecuted(Note note)
         {
-            note.OnNoteExecuted -= HandleNoteExecuted;
+            note.Stop();
 
+            note.OnNoteExecuted -= HandleNoteExecuted;
+            
             _notesArea.RemoveNote(note);
         }
     }

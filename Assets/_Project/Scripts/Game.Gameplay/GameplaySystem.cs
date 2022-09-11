@@ -12,7 +12,7 @@ namespace Game.Gameplay
         private void Awake()
         {
             _playerManager.Initialize();
-            _notesManager.Initialize();
+            _notesManager.Initialize(_playerManager.Player);//TODO: Set the executor dynamically
         }
 
         private void OnDestroy()

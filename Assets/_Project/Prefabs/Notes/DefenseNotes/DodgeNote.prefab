@@ -101,7 +101,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5308235518902583259, guid: e8a46e01ba151e545b13dab3f36e1e47, type: 3}
       propertyPath: m_Name
-      value: DefenseNote
+      value: DodgeNote
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e8a46e01ba151e545b13dab3f36e1e47, type: 3}

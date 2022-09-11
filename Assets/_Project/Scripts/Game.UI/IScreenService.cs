@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Game.UI
 {
-    public interface IUIService
+    public interface IScreenService
     {
         UIScreen CurrentOpenedScreen { get; }
         UIScreen OpenScreen(UIScreen uiScreen, OpenScreenMode openScreenMode = OpenScreenMode.Single, float delay = 0);

@@ -27,7 +27,7 @@ namespace Game.Master
 
             AsyncOperation operation = SceneManager.LoadSceneAsync(nextSceneIndex);
 
-            IUIService uiService = ServiceLocator.GetService<IUIService>();
+            IScreenService screenService = ServiceLocator.GetService<IScreenService>();
             
             // uiService.OpenLoadingScreen(operation);//TODO: Add a loading screen
         }

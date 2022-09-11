@@ -3,11 +3,13 @@ using UnityEngine;
 
 namespace Game.Gameplay.Notes
 {
-    [CreateAssetMenu(menuName = "Playing/NoteData", fileName = "NoteData")]
-    public class NoteData : ScriptableObject
+    public abstract class NoteData : ScriptableObject
     {
+        [Header("General Settings")]
         public NoteType Type;
         public PoolType PoolType;
+        
+        [Header("Animation")]
         public float Duration;
         public float EndValue;
     }

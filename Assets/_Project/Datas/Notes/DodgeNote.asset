@@ -9,10 +9,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: af6ad9f4544b42ef9ffc24a00225bb91, type: 3}
+  m_Script: {fileID: 11500000, guid: 5a10525e9c564cb5b24d481b21b3ca0d, type: 3}
   m_Name: DodgeNote
   m_EditorClassIdentifier: 
   Type: 3
   PoolType: 4
   Duration: 9
   EndValue: -50
+  DamageAbsorption: 0
+  IsInvencible: 1
