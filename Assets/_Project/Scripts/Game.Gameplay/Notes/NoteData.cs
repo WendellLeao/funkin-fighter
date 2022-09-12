@@ -1,4 +1,5 @@
-﻿using Game.Pooling;
+﻿using Game.Gameplay.Animations;
+using Game.Pooling;
 using UnityEngine;
 
 namespace Game.Gameplay.Notes

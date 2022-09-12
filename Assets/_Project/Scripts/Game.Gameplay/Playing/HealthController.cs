@@ -3,7 +3,7 @@ using System;
 
 namespace Game.Gameplay.Playing
 {
-    public sealed class HealthController : MonoBehaviour
+    public sealed class HealthController : MonoBehaviour, IHealthController
     {
         public event Action<float, float> OnHealthChanged;
         

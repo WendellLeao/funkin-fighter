@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Game.Gameplay.Playing
+namespace Game.Gameplay.Animations
 {
     public interface IAnimRequester
     {

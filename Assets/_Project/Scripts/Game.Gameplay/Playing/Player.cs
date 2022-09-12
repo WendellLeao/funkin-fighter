@@ -1,4 +1,5 @@
-﻿using Game.Gameplay.Notes;
+﻿using Game.Gameplay.Animations;
+using Game.Gameplay.Notes;
 using UnityEngine;
 using Game.Events;
 using Game.Input;
@@ -30,7 +31,7 @@ namespace Game.Gameplay.Playing
             _inputService = inputService;
 
             _healthController.Initialize();
-            _damageController.Initialize(this, _eventService, _healthController);
+            _damageController.Initialize(_healthController, _eventService, this);
             _animationsController.Initialize();
 
             SubscribeEvents();

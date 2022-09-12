@@ -1,4 +1,5 @@
-﻿using Game.Gameplay.Notes;
+﻿using Game.Gameplay.Animations;
+using Game.Gameplay.Notes;
 using UnityEngine;
 using Game.Events;
 using System;
@@ -10,13 +11,13 @@ namespace Game.Gameplay.Playing
         public event Action<string> OnAnimateTrigger;
         public event Action<string, bool> OnAnimateBool;
         
-        private HealthController _healthController;
+        private IHealthController _healthController;
         private IEventService _eventService;
         private INoteExecutor _localExecutor;
-        private int _damageAbsorption;
         private bool _mustIgnoreDamage;
+        private int _damageAbsorption;
         
-        public void Initialize(INoteExecutor executor, IEventService eventService, HealthController healthController)
+        public void Initialize(IHealthController healthController, IEventService eventService, INoteExecutor executor)
         {
             _healthController = healthController;
             _eventService = eventService;
@@ -43,32 +44,28 @@ namespace Game.Gameplay.Playing
                 
                 INoteExecutor noteExecutor = inputExecutedEvent.Executor;
                 
-                if (note is AttackNote attackNote && !IsLocalExecutor(noteExecutor))
+                if (note is AttackNote attackNote)
                 {
-                    if (_mustIgnoreDamage)
+                    if (_mustIgnoreDamage || IsLocalExecutor(noteExecutor))
                     {
                         return;
                     }
                     
                     ApplyDamage(attackNote);
                     
-                    _damageAbsorption = 0;
-                    
-                    _mustIgnoreDamage = false;
+                    OnAnimateTrigger?.Invoke("Hit");//TODO: Set the animation id dynamically
 
                     return;
                 }
 
-                if (note is DefenseNote defenseNote && IsLocalExecutor(noteExecutor))
+                if (!IsLocalExecutor(noteExecutor))
                 {
-                    DefenseNoteData defenseData = defenseNote.DefenseData;
-
-                    _damageAbsorption = defenseData.DamageAbsorption;
-
-                    _mustIgnoreDamage = defenseData.MustIgnoreDamage;
-                    
-                    OnAnimateTrigger?.Invoke(defenseData.AnimationData.ID);
+                    return;
                 }
+                
+                DefenseNote defenseNote = (DefenseNote) note;
+
+                AbsorbDamage(defenseNote);
             }
         }
 
@@ -76,17 +73,42 @@ namespace Game.Gameplay.Playing
         {
             AttackNoteData attackData = attackNote.AttackData;
 
+            float damage = CalculateDamage(attackData);
+
+            _healthController.Remove(damage);
+
+            RemoveDamageAbsorption();
+        }
+
+        private float CalculateDamage(AttackNoteData attackData)
+        {
             float damage = attackData.Damage;
 
             damage -= _damageAbsorption;//TODO: Review this
 
             damage = Math.Clamp(damage, 0, attackData.Damage);
-
-            _healthController.Remove(damage);
             
-            OnAnimateTrigger?.Invoke("Hit");//TODO: Fix this
+            return damage;
         }
 
+        private void AbsorbDamage(DefenseNote defenseNote)
+        {
+            DefenseNoteData defenseData = defenseNote.DefenseData;
+
+            _damageAbsorption = defenseData.DamageAbsorption;
+
+            _mustIgnoreDamage = defenseData.MustIgnoreDamage;
+                    
+            OnAnimateTrigger?.Invoke(defenseData.AnimationData.ID);
+        }
+        
+        private void RemoveDamageAbsorption()
+        {
+            _damageAbsorption = 0;
+                    
+            _mustIgnoreDamage = false;
+        }
+        
         private bool IsLocalExecutor(INoteExecutor executor)
         {
             return executor == _localExecutor;

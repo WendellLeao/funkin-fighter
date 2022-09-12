@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Game.Gameplay.Playing
+namespace Game.Gameplay.Animations
 {
     public sealed class AnimationsController : MonoBehaviour
     {
@@ -12,7 +12,7 @@ namespace Game.Gameplay.Playing
         {
             _requesters = gameObject.GetComponents<IAnimRequester>();
 
-            foreach (var animRequester in _requesters)
+            foreach (IAnimRequester animRequester in _requesters)
             {
                 animRequester.OnAnimateTrigger += HandleAnimationTrigger;
                 animRequester.OnAnimateBool += HandleAnimationBool;
@@ -21,7 +21,7 @@ namespace Game.Gameplay.Playing
 
         public void Dispose()
         {
-            foreach (var animRequester in _requesters)
+            foreach (IAnimRequester animRequester in _requesters)
             {
                 animRequester.OnAnimateTrigger -= HandleAnimationTrigger;
                 animRequester.OnAnimateBool -= HandleAnimationBool;

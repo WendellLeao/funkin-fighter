@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Game.Gameplay.Notes
+namespace Game.Gameplay.Animations
 {
     [CreateAssetMenu(menuName = "Animation/AnimationData", fileName = "AnimationData")]
     public sealed class AnimationData : ScriptableObject

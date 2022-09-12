@@ -9,16 +9,19 @@ namespace Game.Gameplay.Playing
     {
         [SerializeField] private Player _player;
         [SerializeField] private Player _playerBot;
+        
+        private IEventService _eventService;
+        private IInputService _inputService;
 
         public Player Player => _player;
 
         public void Initialize()
         {
-            IEventService eventService = ServiceLocator.GetService<IEventService>();
-            IInputService inputService = ServiceLocator.GetService<IInputService>();
+            _eventService = ServiceLocator.GetService<IEventService>();
+            _inputService = ServiceLocator.GetService<IInputService>();
             
-            _player.Begin(eventService, inputService);
-            _playerBot.Begin(eventService, inputService);
+            _player.Begin(_eventService, _inputService);
+            _playerBot.Begin(_eventService, _inputService);
         }
 
         public void Dispose()

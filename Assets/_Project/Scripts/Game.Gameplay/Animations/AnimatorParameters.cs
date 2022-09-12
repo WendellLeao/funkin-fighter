@@ -1,4 +1,4 @@
-﻿namespace Game.Gameplay.Playing
+﻿namespace Game.Gameplay.Animations
 {
     public sealed class AnimatorParameters
     { }
