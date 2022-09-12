@@ -2,14 +2,19 @@
 using UnityEngine;
 using Game.Events;
 using Game.Input;
+using System;
 
 namespace Game.Gameplay.Playing
 {
-    public sealed class Player : Entity, INoteExecutor
+    public sealed class Player : Entity, INoteExecutor, IAnimRequester
     {
+        public event Action<string> OnAnimateTrigger;
+        public event Action<string, bool> OnAnimateBool;
+        
         [Header("Controllers")]
         [SerializeField] private HealthController _healthController;
         [SerializeField] private DamageController _damageController;
+        [SerializeField] private AnimationsController _animationsController;
 
         private PlayerInputsData _playerInputsData;
         private IEventService _eventService;
@@ -26,6 +31,7 @@ namespace Game.Gameplay.Playing
 
             _healthController.Initialize();
             _damageController.Initialize(this, _eventService, _healthController);
+            _animationsController.Initialize();
 
             SubscribeEvents();
         }
@@ -34,6 +40,7 @@ namespace Game.Gameplay.Playing
         {
             _healthController.Dispose();
             _damageController.Dispose();
+            _animationsController.Dispose();
             
             UnsubscribeEvents();
         }
@@ -81,19 +88,9 @@ namespace Game.Gameplay.Playing
         
         private void HandleNoteExitExecuteArea(ServiceEvent serviceEvent)
         {
-            if (serviceEvent is NoteExitExecuteAreaEvent noteExitExecuteAreaEvent)
-            {
-                Note note = noteExitExecuteAreaEvent.Note;
-                
-                if (!note.HasExecuted)
-                {
-                    Debug.Log($"<color=red>Perdeu a nota: {note.Data.Type}</color>");
-                }
-                
-                _mustExecuteInput = false;
+            _mustExecuteInput = false;
                     
-                _currentNote = null;
-            }
+            _currentNote = null;
         }
         
         private void CheckNoteExecution(Note note)
@@ -104,43 +101,23 @@ namespace Game.Gameplay.Playing
                 {
                     HandleInputExecution(note, _playerInputsData.ExecuteLightAttack);
 
-                    if (_playerInputsData.ExecuteLightAttack)
-                    {
-                        //Debug.Log($"<color=green>Acertou a nota: <color=lime><b>{NoteType.LightAttack}</b></color></color>");
-                    }
-                    
                     break;
                 }
                 case NoteType.HeavyAttack:
                 {
                     HandleInputExecution(note, _playerInputsData.ExecuteHeavyAttack);
-
-                    if (_playerInputsData.ExecuteHeavyAttack)
-                    {
-                        //Debug.Log($"<color=green>Acertou a nota: <color=lime><b>{NoteType.HeavyAttack}</b></color></color>");
-                    }
                     
                     break;
                 }
                 case NoteType.Defend:
                 {
                     HandleInputExecution(note, _playerInputsData.ExecuteDefend);
-
-                    if (_playerInputsData.ExecuteDefend)
-                    {
-                        //Debug.Log($"<color=green>Acertou a nota: <color=lime><b>{NoteType.Defend}</b></color></color>");
-                    }
                     
                     break;
                 }
                 case NoteType.Dodge:
                 {
                     HandleInputExecution(note, _playerInputsData.ExecuteDodge);
-
-                    if (_playerInputsData.ExecuteDodge)
-                    {
-                        //Debug.Log($"<color=green>Acertou a nota: <color=lime><b>{NoteType.Dodge}</b></color></color>");
-                    }
                     
                     break;
                 }
@@ -150,6 +127,10 @@ namespace Game.Gameplay.Playing
         private void HandleInputExecution(Note note, bool hasCorrectlyHit)
         {
             note.Execute(hasCorrectlyHit);
+
+            NoteData noteData = note.Data;
+            
+            OnAnimateTrigger?.Invoke(noteData.AnimationData.ID);
             
             _eventService.DispatchEvent(new InputExecutedEvent(this, note, hasCorrectlyHit));
         }

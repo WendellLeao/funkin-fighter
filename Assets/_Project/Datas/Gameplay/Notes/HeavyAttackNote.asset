@@ -13,7 +13,8 @@ MonoBehaviour:
   m_Name: HeavyAttackNote
   m_EditorClassIdentifier: 
   Type: 1
-  PoolType: 2
+  PoolData: {fileID: 11400000, guid: a4c549ea169e7f04db8f298b2d95b54e, type: 2}
   Duration: 9
   EndValue: -50
+  AnimationData: {fileID: 11400000, guid: e034263df0f65734883b964ae9317b8f, type: 2}
   Damage: 9

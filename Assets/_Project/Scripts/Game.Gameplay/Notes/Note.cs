@@ -64,7 +64,9 @@ namespace Game.Gameplay.Notes
         
         protected virtual void OnComplete()
         {
-            _poolingService.ReturnObjectToPool(_data.PoolType, gameObject);
+            PoolData poolData = _data.PoolData;
+            
+            _poolingService.ReturnObjectToPool(poolData.PoolType, gameObject);
         }
 
         public void SetExecutor(INoteExecutor noteExecutor)

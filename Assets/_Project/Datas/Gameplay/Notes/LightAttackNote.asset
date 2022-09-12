@@ -13,7 +13,8 @@ MonoBehaviour:
   m_Name: LightAttackNote
   m_EditorClassIdentifier: 
   Type: 0
-  PoolType: 1
+  PoolData: {fileID: 11400000, guid: e0c76c51a7b1e174382e6229dd84ba71, type: 2}
   Duration: 9
   EndValue: -50
+  AnimationData: {fileID: 11400000, guid: 628f6770b6f27fb409dc84c1e2bd5c0c, type: 2}
   Damage: 3

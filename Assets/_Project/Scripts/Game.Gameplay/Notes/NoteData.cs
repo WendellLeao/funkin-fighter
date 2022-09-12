@@ -7,10 +7,13 @@ namespace Game.Gameplay.Notes
     {
         [Header("General Settings")]
         public NoteType Type;
-        public PoolType PoolType;
+        public PoolData PoolData;
         
-        [Header("Animation")]
+        [Header("Notes Animation")]
         public float Duration;
         public float EndValue;
+
+        [Header("Player Animation")] 
+        public AnimationData AnimationData;
     }
 }

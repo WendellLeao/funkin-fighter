@@ -7,6 +7,6 @@ namespace Game.Gameplay.Notes
     {
         [Header("Defense"), Range(0f, 100f)]
         public int DamageAbsorption;
-        public bool IsInvencible;
+        public bool MustIgnoreDamage;
     }
 }

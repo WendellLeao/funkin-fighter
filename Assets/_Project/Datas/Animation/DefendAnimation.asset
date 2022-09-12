@@ -9,12 +9,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5a10525e9c564cb5b24d481b21b3ca0d, type: 3}
-  m_Name: DodgeNote
+  m_Script: {fileID: 11500000, guid: 7b14ca1b2a5043d5812e696380afb801, type: 3}
+  m_Name: DefendAnimation
   m_EditorClassIdentifier: 
-  Type: 3
-  PoolType: 4
-  Duration: 9
-  EndValue: -50
-  DamageAbsorption: 0
-  IsInvencible: 1
+  ID: Defend

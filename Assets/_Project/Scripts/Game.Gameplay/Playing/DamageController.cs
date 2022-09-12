@@ -5,13 +5,16 @@ using System;
 
 namespace Game.Gameplay.Playing
 {
-    public sealed class DamageController : MonoBehaviour
+    public sealed class DamageController : MonoBehaviour, IAnimRequester
     {
+        public event Action<string> OnAnimateTrigger;
+        public event Action<string, bool> OnAnimateBool;
+        
         private HealthController _healthController;
         private IEventService _eventService;
         private INoteExecutor _localExecutor;
         private int _damageAbsorption;
-        private bool _isInvencible;
+        private bool _mustIgnoreDamage;
         
         public void Initialize(INoteExecutor executor, IEventService eventService, HealthController healthController)
         {
@@ -42,16 +45,16 @@ namespace Game.Gameplay.Playing
                 
                 if (note is AttackNote attackNote && !IsLocalExecutor(noteExecutor))
                 {
-                    if (_isInvencible)
+                    if (_mustIgnoreDamage)
                     {
                         return;
                     }
                     
                     ApplyDamage(attackNote);
-
+                    
                     _damageAbsorption = 0;
                     
-                    _isInvencible = false;
+                    _mustIgnoreDamage = false;
 
                     return;
                 }
@@ -62,7 +65,9 @@ namespace Game.Gameplay.Playing
 
                     _damageAbsorption = defenseData.DamageAbsorption;
 
-                    _isInvencible = defenseData.IsInvencible;
+                    _mustIgnoreDamage = defenseData.MustIgnoreDamage;
+                    
+                    OnAnimateTrigger?.Invoke(defenseData.AnimationData.ID);
                 }
             }
         }
@@ -73,21 +78,18 @@ namespace Game.Gameplay.Playing
 
             float damage = attackData.Damage;
 
-            damage -= _damageAbsorption; //TODO: Review this
+            damage -= _damageAbsorption;//TODO: Review this
 
             damage = Math.Clamp(damage, 0, attackData.Damage);
 
             _healthController.Remove(damage);
+            
+            OnAnimateTrigger?.Invoke("Hit");//TODO: Fix this
         }
 
         private bool IsLocalExecutor(INoteExecutor executor)
         {
-            if (executor == _localExecutor)
-            {
-                return true;
-            }
-
-            return false;
+            return executor == _localExecutor;
         }
     }
 }
