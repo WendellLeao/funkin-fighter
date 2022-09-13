@@ -1,29 +1,35 @@
 using Game.Gameplay.Playing;
 using Game.Gameplay.Notes;
+using Game.Services;
+using Game.Pooling;
+using Game.Events;
 using UnityEngine;
 
 namespace Game.Gameplay
 {
     public sealed class GameplaySystem : MonoBehaviour
     {
-        [SerializeField] private PlayerManager _playerManager;
+        [SerializeField] private PlayersManager _playersManager;
         [SerializeField] private NotesManager _notesManager;
 
         private void Awake()
         {
-            _playerManager.Initialize();
-            _notesManager.Initialize(_playerManager.Player);//TODO: Set the executor dynamically
+            IEventService eventService = ServiceLocator.GetService<IEventService>();
+            IPoolingService poolingService = ServiceLocator.GetService<IPoolingService>();
+            
+            _playersManager.Initialize(eventService);
+            _notesManager.Initialize(eventService, poolingService);
         }
 
         private void OnDestroy()
         {
-            _playerManager.Dispose();
+            _playersManager.Dispose();
             _notesManager.Dispose();
         }
 
         private void Update()
         {
-            _playerManager.Tick(Time.deltaTime);
+            _playersManager.Tick(Time.deltaTime);
             _notesManager.Tick(Time.deltaTime);
         }
     }

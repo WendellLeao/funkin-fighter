@@ -163,7 +163,7 @@ GameObject:
   - component: {fileID: 6970156712934501065}
   - component: {fileID: 4598585434020710812}
   m_Layer: 5
-  m_Name: PlayerStatusContainer
+  m_Name: PlayerStatusUI
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -203,6 +203,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b9936dd465b84903bc403f5d6c25474b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _player: {fileID: 0}
   _healthBarImage: {fileID: 6970156712338309155}
   _specialBarImage: {fileID: 6970156712718996095}

@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using Game.Services;
+using UnityEngine;
+using Game.Events;
 
 namespace Game.UI
 {
@@ -8,7 +10,9 @@ namespace Game.UI
         
         private void Awake()
         {
-            _playerUIManager.Initialize();
+            IEventService eventService = ServiceLocator.GetService<IEventService>();
+            
+            _playerUIManager.Initialize(eventService);
         }
 
         private void OnDestroy()

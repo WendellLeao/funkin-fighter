@@ -1,6 +1,5 @@
 ﻿using Game.Gameplay.Playing;
 using System.Collections;
-using Game.Services;
 using Game.Pooling;
 using Game.Events;
 using UnityEngine;
@@ -18,21 +17,24 @@ namespace Game.Gameplay.Notes
         private INoteExecutor _noteExecutor;
         private Coroutine _spawnRoutine;
         private int _lastRandomIndex;
+        private bool _canSetExecutor = true; //DEBUG
 
-        public void Initialize(INoteExecutor noteExecutor)
+        public void Initialize(IEventService eventService, IPoolingService poolingService)
         {
-            _noteExecutor = noteExecutor;
-            
-            _poolingService = ServiceLocator.GetService<IPoolingService>();
-            _eventService = ServiceLocator.GetService<IEventService>();
-            
+            _eventService = eventService;
+            _poolingService = poolingService;
+
             _notesArea.Initialize(_eventService);
 
             _spawnRoutine = StartCoroutine(SpawnNotesRoutine());
+            
+            _eventService.AddEventListener<PlayerCreatedEvent>(HandlePlayerCreated);
         }
 
         public void Dispose()
         {
+            _eventService.RemoveEventListener<PlayerCreatedEvent>(HandlePlayerCreated);
+            
             if (_spawnRoutine == null)
             {
                 return;
@@ -46,6 +48,23 @@ namespace Game.Gameplay.Notes
             _notesArea.Tick(deltaTime);
         }
 
+        private void HandlePlayerCreated(ServiceEvent serviceEvent)
+        {
+            if (!_canSetExecutor)
+            {
+                return;
+            }
+            
+            if (serviceEvent is PlayerCreatedEvent playerCreatedEvent)
+            {
+                Player player = playerCreatedEvent.Player;
+                
+                _noteExecutor = player.PlayerInputs;
+
+                _canSetExecutor = false;////
+            }
+        }
+        
         private IEnumerator SpawnNotesRoutine()
         {
             Note note = SpawnRandomNote();
@@ -65,6 +84,15 @@ namespace Game.Gameplay.Notes
             _spawnRoutine = StartCoroutine(SpawnNotesRoutine());
         }
 
+        private void HandleNoteExecuted(Note note)
+        {
+            note.Stop();
+
+            note.OnNoteExecuted -= HandleNoteExecuted;
+            
+            _notesArea.RemoveNote(note);
+        }
+        
         private Note SpawnRandomNote()
         {
             bool hasFoundUniqueNumber = false;
@@ -121,15 +149,6 @@ namespace Game.Gameplay.Notes
             } 
             
             note.SetPosition(targetPosition);
-        }
-
-        private void HandleNoteExecuted(Note note)
-        {
-            note.Stop();
-
-            note.OnNoteExecuted -= HandleNoteExecuted;
-            
-            _notesArea.RemoveNote(note);
         }
     }
 }

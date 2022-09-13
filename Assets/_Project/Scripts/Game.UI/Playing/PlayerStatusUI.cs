@@ -6,14 +6,16 @@ namespace Game.UI.Playing
 {
     public sealed class PlayerStatusUI : MonoBehaviour
     {
-        [SerializeField] private Player _player;//TODO: Set players reference dynamically
         [SerializeField] private Image _healthBarImage;
         [SerializeField] private Image _specialBarImage;
 
+        private Player _player;
         private HealthController _playerHealthController;
 
-        public void Begin()
+        public void Begin(Player player)
         {
+            _player = player;
+
             _playerHealthController = _player.HealthController;
 
             _playerHealthController.OnHealthChanged += HandlePlayerHealthChanged;

@@ -11,13 +11,13 @@ namespace Game.Gameplay.Playing
         public event Action<string> OnAnimateTrigger;
         public event Action<string, bool> OnAnimateBool;
         
-        private IHealthController _healthController;
+        private HealthController _healthController;
         private IEventService _eventService;
         private INoteExecutor _localExecutor;
         private bool _mustIgnoreDamage;
         private int _damageAbsorption;
         
-        public void Initialize(IHealthController healthController, IEventService eventService, INoteExecutor executor)
+        public void Initialize(HealthController healthController, IEventService eventService, INoteExecutor executor)
         {
             _healthController = healthController;
             _eventService = eventService;
@@ -46,7 +46,7 @@ namespace Game.Gameplay.Playing
                 
                 if (note is AttackNote attackNote)
                 {
-                    if (_mustIgnoreDamage || IsLocalExecutor(noteExecutor))
+                    if (_mustIgnoreDamage || IsNoteExecutor(noteExecutor))
                     {
                         return;
                     }
@@ -58,7 +58,7 @@ namespace Game.Gameplay.Playing
                     return;
                 }
 
-                if (!IsLocalExecutor(noteExecutor))
+                if (!IsNoteExecutor(noteExecutor))
                 {
                     return;
                 }
@@ -109,7 +109,7 @@ namespace Game.Gameplay.Playing
             _mustIgnoreDamage = false;
         }
         
-        private bool IsLocalExecutor(INoteExecutor executor)
+        private bool IsNoteExecutor(INoteExecutor executor)
         {
             return executor == _localExecutor;
         }
