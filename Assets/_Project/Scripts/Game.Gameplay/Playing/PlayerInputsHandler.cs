@@ -9,6 +9,7 @@ namespace Game.Gameplay.Playing
 {
     public sealed class PlayerInputsHandler : MonoBehaviour, INoteExecutor, IAnimRequester
     {
+        public event Action<Note, bool> OnInputExecuted; 
         public event Action<string> OnAnimateTrigger;
         public event Action<string, bool> OnAnimateBool;
         
@@ -106,9 +107,9 @@ namespace Game.Gameplay.Playing
 
             NoteData noteData = note.Data;
             
+            OnInputExecuted?.Invoke(note, hasCorrectlyHit);
+
             OnAnimateTrigger?.Invoke(noteData.AnimationData.ID);
-            
-            _eventService.DispatchEvent(new InputExecutedEvent(this, note, hasCorrectlyHit));
         }
 
         private bool CanExecuteNote(Note currentNote)

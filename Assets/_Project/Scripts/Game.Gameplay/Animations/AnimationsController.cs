@@ -10,7 +10,7 @@ namespace Game.Gameplay.Animations
 
         public void Initialize()
         {
-            _requesters = gameObject.GetComponents<IAnimRequester>();
+            _requesters = GetComponentsInParent<IAnimRequester>();
 
             foreach (IAnimRequester animRequester in _requesters)
             {

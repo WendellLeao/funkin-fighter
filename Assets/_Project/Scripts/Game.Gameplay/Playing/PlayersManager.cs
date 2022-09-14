@@ -8,8 +8,8 @@ namespace Game.Gameplay.Playing
 {
     public sealed class PlayersManager : MonoBehaviour
     {
-        [SerializeField] private Player _playerPrefab;
         [SerializeField] private Transform[] _spawnPoints;
+        [SerializeField] private Player _playerPrefab;
         
         private IEventService _eventService;
         private IInputService _inputService;
@@ -53,7 +53,7 @@ namespace Game.Gameplay.Playing
 
                 FixPlayerScale(index, newPlayer);
 
-                newPlayer.Begin(_eventService, _inputService);
+                newPlayer.Begin(_eventService, _inputService, index);
                 
                 _activePlayers.Add(newPlayer);
                 

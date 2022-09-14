@@ -10,6 +10,6 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7b14ca1b2a5043d5812e696380afb801, type: 3}
-  m_Name: DodgeAnimation
+  m_Name: DefendAnimData
   m_EditorClassIdentifier: 
-  ID: Dodge
+  ID: Defend

@@ -17,8 +17,8 @@ namespace Game.Gameplay
             IEventService eventService = ServiceLocator.GetService<IEventService>();
             IPoolingService poolingService = ServiceLocator.GetService<IPoolingService>();
             
-            _playersManager.Initialize(eventService);
             _notesManager.Initialize(eventService, poolingService);
+            _playersManager.Initialize(eventService);
         }
 
         private void OnDestroy()

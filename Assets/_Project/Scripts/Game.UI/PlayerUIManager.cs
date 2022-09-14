@@ -8,12 +8,11 @@ namespace Game.UI
 {
     public sealed class PlayerUIManager : MonoBehaviour
     {
-        [SerializeField] private PlayerStatusUI _playerStatusUIPrefab;
         [SerializeField] private Transform[] _spawnPoints;
+        [SerializeField] private PlayerStatusUI _playerStatusUIPrefab;
         
         private List<PlayerStatusUI> _activeStatusUI;
         private IEventService _eventService;
-        private int _playerIndex;
 
         public void Initialize(IEventService eventService)
         {
@@ -50,13 +49,13 @@ namespace Game.UI
 
                 PlayerStatusUI playerStatusUI = Instantiate(_playerStatusUIPrefab, transform);
 
-                playerStatusUI.transform.position = _spawnPoints[_playerIndex].position;
+                Transform spawnPoint = _spawnPoints[player.Index];
+
+                playerStatusUI.transform.position = spawnPoint.position;
                 
                 playerStatusUI.Begin(player);
                 
                 _activeStatusUI.Add(playerStatusUI);
-
-                _playerIndex += 1;
             }
         }
     }

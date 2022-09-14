@@ -13,13 +13,16 @@ namespace Game.Gameplay.Playing
         [SerializeField] private AnimationsController _animationsController;
 
         private IEventService _eventService;
-
+        private int _index;
+        
         public PlayerInputsHandler PlayerInputs => _playerInputs;
         public HealthController HealthController => _healthController;
+        public int Index => _index;
 
-        public void Begin(IEventService eventService, IInputService inputService)
+        public void Begin(IEventService eventService, IInputService inputService, int index)
         {
             _eventService = eventService;
+            _index = index;
 
             _playerInputs.Initialize(inputService, _eventService);
             _healthController.Initialize();
