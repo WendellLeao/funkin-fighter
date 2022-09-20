@@ -25,26 +25,26 @@ namespace Game.Gameplay.Notes
 
         private IPoolingService _poolingService;
         private IEventService _eventService;
-        private INoteExecutor _noteExecutor;
+        private INotesExecutor _notesExecutor;
         private List<Note> _activeNotes;
         private Coroutine _spawnRoutine;
         private int _lastRandomIndex;
 
-        public void Begin(INoteExecutor noteExecutor, IEventService eventService)
+        public void Begin(INotesExecutor notesExecutor, IEventService eventService)
         {
-            _noteExecutor = noteExecutor;
+            _notesExecutor = notesExecutor;
             _eventService = eventService;
 
             _activeNotes = new List<Note>();
             
             _spawnRoutine = StartCoroutine(SpawnNotesRoutine());
 
-            _noteExecutor.OnInputExecuted += HandleInputExecuted;
+            _notesExecutor.OnNoteExecuted += HandleNotesExecuted;
         }
 
         public void Stop()
         {
-            _noteExecutor.OnInputExecuted -= HandleInputExecuted;
+            _notesExecutor.OnNoteExecuted -= HandleNotesExecuted;
             
             if (_spawnRoutine != null)
             {
@@ -62,17 +62,17 @@ namespace Game.Gameplay.Notes
             RefreshExecutionArea();
         }
 
-        private void HandleInputExecuted(Note note, bool hasCorrectlyHit)
+        private void HandleNotesExecuted(Note note, bool hasCorrectlyHit)
         {
-            _eventService.DispatchEvent(new InputExecutedEvent(_noteExecutor, note, hasCorrectlyHit));
+            _eventService.DispatchEvent(new NoteExecutedEvent(_notesExecutor, note, hasCorrectlyHit));
         }
         
         private IEnumerator SpawnNotesRoutine()
         {
             Note note = SpawnRandomNote();
 
-            note.SetExecutor(_noteExecutor);
-            
+            note.SetExecutor(_notesExecutor);
+
             note.OnNoteExecuted += HandleNoteExecuted;
             
             _activeNotes.Add(note);
@@ -163,7 +163,7 @@ namespace Game.Gameplay.Notes
                     {
                         continue;
                     }
-                    
+
                     note.EnterExecutionArea();
 
                     _eventService.DispatchEvent(new NoteEnterExecuteAreaEvent(note));

@@ -45,15 +45,15 @@ namespace Game.UI
         {
             if (serviceEvent is PlayerCreatedEvent playerCreatedEvent)
             {
-                Player player = playerCreatedEvent.Player;
+                PlayerBase playerBase = playerCreatedEvent.PlayerBase;
 
                 PlayerStatusUI playerStatusUI = Instantiate(_playerStatusUIPrefab, transform);
 
-                Transform spawnPoint = _spawnPoints[player.Index];
+                Transform spawnPoint = _spawnPoints[playerBase.Index];
 
                 playerStatusUI.transform.position = spawnPoint.position;
                 
-                playerStatusUI.Begin(player);
+                playerStatusUI.Begin(playerBase);
                 
                 _activeStatusUI.Add(playerStatusUI);
             }

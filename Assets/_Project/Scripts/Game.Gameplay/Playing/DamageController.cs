@@ -12,28 +12,28 @@ namespace Game.Gameplay.Playing
         public event Action<string, bool> OnAnimateBool;
         
         private HealthController _healthController;
+        private INotesExecutor _notesExecutor;
         private IEventService _eventService;
-        private INoteExecutor _localExecutor;
         private bool _mustIgnoreDamage;
         private int _damageAbsorption;
         
-        public void Initialize(HealthController healthController, IEventService eventService, INoteExecutor executor)
+        public void Initialize(HealthController healthController, IEventService eventService, INotesExecutor executor)
         {
             _healthController = healthController;
             _eventService = eventService;
-            _localExecutor = executor;
+            _notesExecutor = executor;
             
-            _eventService.AddEventListener<InputExecutedEvent>(HandleInputExecutedEvent);
+            _eventService.AddEventListener<NoteExecutedEvent>(HandleInputExecutedEvent);
         }
 
         public void Dispose()
         {
-            _eventService.RemoveEventListener<InputExecutedEvent>(HandleInputExecutedEvent);
+            _eventService.RemoveEventListener<NoteExecutedEvent>(HandleInputExecutedEvent);
         }
         
         private void HandleInputExecutedEvent(ServiceEvent serviceEvent)
         {
-            if (serviceEvent is InputExecutedEvent inputExecutedEvent)
+            if (serviceEvent is NoteExecutedEvent inputExecutedEvent)
             {
                 if (!inputExecutedEvent.HasCorrectlyHit)
                 {
@@ -42,11 +42,11 @@ namespace Game.Gameplay.Playing
 
                 Note note = inputExecutedEvent.Note;
                 
-                INoteExecutor noteExecutor = inputExecutedEvent.Executor;
+                INotesExecutor notesExecutor = inputExecutedEvent.Executor;
                 
                 if (note is AttackNote attackNote)
                 {
-                    if (_mustIgnoreDamage || IsNoteExecutor(noteExecutor))
+                    if (_mustIgnoreDamage || IsNoteExecutor(notesExecutor))
                     {
                         return;
                     }
@@ -58,7 +58,7 @@ namespace Game.Gameplay.Playing
                     return;
                 }
 
-                if (!IsNoteExecutor(noteExecutor))
+                if (!IsNoteExecutor(notesExecutor))
                 {
                     return;
                 }
@@ -109,9 +109,9 @@ namespace Game.Gameplay.Playing
             _mustIgnoreDamage = false;
         }
         
-        private bool IsNoteExecutor(INoteExecutor executor)
+        private bool IsNoteExecutor(INotesExecutor executor)
         {
-            return executor == _localExecutor;
+            return executor == _notesExecutor;
         }
     }
 }

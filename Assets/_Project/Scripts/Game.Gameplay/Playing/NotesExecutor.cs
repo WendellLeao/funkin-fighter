@@ -7,22 +7,27 @@ using System;
 
 namespace Game.Gameplay.Playing
 {
-    public sealed class PlayerInputsHandler : MonoBehaviour, INoteExecutor, IAnimRequester
+    public sealed class NotesExecutor : MonoBehaviour, INotesExecutor, IAnimRequester
     {
-        public event Action<Note, bool> OnInputExecuted; 
-        public event Action<string> OnAnimateTrigger;
+        public event Action<Note, bool> OnNoteExecuted; 
+        
         public event Action<string, bool> OnAnimateBool;
+        public event Action<string> OnAnimateTrigger;
         
         private PlayerInputsData _playerInputsData;
         private IEventService _eventService;
         private IInputService _inputService;
         private bool _mustExecuteInput;
         private Note _currentNote;
+        private int _index;
 
-        public void Initialize(IInputService inputService, IEventService eventService)
+        public int Index => _index;
+
+        public void Initialize(IInputService inputService, IEventService eventService, int index)
         {
             _inputService = inputService;
             _eventService = eventService;
+            _index = index;
 
             _inputService.OnReadPlayerInputs += HandlePlayerInputs;
             
@@ -57,17 +62,34 @@ namespace Game.Gameplay.Playing
         {
             if (serviceEvent is NoteEnterExecuteAreaEvent noteEnterExecuteAreaEvent)
             {
+                Note note = noteEnterExecuteAreaEvent.Note;
+                
+                if (!HasAuthority(note))
+                {
+                    return;
+                }
+                
                 _mustExecuteInput = true;
                 
-                _currentNote = noteEnterExecuteAreaEvent.Note;
+                _currentNote = note;
             }
         }
         
         private void HandleNoteExitExecuteArea(ServiceEvent serviceEvent)
         {
-            _mustExecuteInput = false;
-                    
-            _currentNote = null;
+            if (serviceEvent is NoteEnterExecuteAreaEvent noteEnterExecuteAreaEvent)
+            {
+                Note note = noteEnterExecuteAreaEvent.Note;
+                
+                if (!HasAuthority(note))
+                {
+                    return;
+                }
+
+                _mustExecuteInput = false;
+                        
+                _currentNote = null;
+            }
         }
         
         private void CheckNoteExecution(Note note)
@@ -107,9 +129,26 @@ namespace Game.Gameplay.Playing
 
             NoteData noteData = note.Data;
             
-            OnInputExecuted?.Invoke(note, hasCorrectlyHit);
+            OnNoteExecuted?.Invoke(note, hasCorrectlyHit);
+
+            if (!hasCorrectlyHit)
+            {
+                return;
+            }
 
             OnAnimateTrigger?.Invoke(noteData.AnimationData.ID);
+        }
+        
+        public bool HasAuthority(Note note)
+        {
+            INotesExecutor notesExecutor = note.NotesExecutor;
+            
+            if (notesExecutor.Index == Index)
+            {
+                return true;
+            }
+
+            return false;
         }
 
         private bool CanExecuteNote(Note currentNote)
@@ -119,7 +158,9 @@ namespace Game.Gameplay.Playing
                 return false;
             }
 
-            if ((PlayerInputsHandler) currentNote.NoteExecutor != this)
+            INotesExecutor currentNotesExecutor = currentNote.NotesExecutor;
+            
+            if (currentNotesExecutor.Index != Index)
             {
                 return false;
             }

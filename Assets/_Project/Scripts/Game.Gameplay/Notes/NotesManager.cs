@@ -48,13 +48,13 @@ namespace Game.Gameplay.Notes
         {
             if (serviceEvent is PlayerCreatedEvent playerCreatedEvent)
             {
-                Player player = playerCreatedEvent.Player;
+                PlayerBase playerBase = playerCreatedEvent.PlayerBase;
 
-                RectTransform spawnPoint = _spawnPoints[player.Index];
+                RectTransform spawnPoint = _spawnPoints[playerBase.Index];
                 
                 NotesArea notesArea = Instantiate(_notesAreaPrefab, spawnPoint);
 
-                notesArea.Begin(player.PlayerInputs, _eventService);
+                notesArea.Begin(playerBase.NotesExecutor, _eventService);
 
                 _notesArea.Add(notesArea);
             }

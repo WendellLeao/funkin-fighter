@@ -14,12 +14,12 @@ namespace Game.Gameplay.Notes
         [SerializeField] private NoteData _data;
         
         private IPoolingService _poolingService;
-        private INoteExecutor _noteExecutor;
+        private INotesExecutor _notesExecutor;
         private bool _hasEnteredExecutionArea;
         private bool _hasExecuted;
 
         public NoteData Data => _data;
-        public INoteExecutor NoteExecutor => _noteExecutor;
+        public INotesExecutor NotesExecutor => _notesExecutor;
         public Vector2 AnchoredPosition => _rectTransform.anchoredPosition;
         public bool HasEnteredExecutionArea => _hasEnteredExecutionArea;
         public bool HasExecuted => _hasExecuted;
@@ -34,10 +34,10 @@ namespace Game.Gameplay.Notes
 
         public virtual void Stop()
         {
-            _hasEnteredExecutionArea = false;
-            _hasExecuted = false;
-            
-            _noteExecutor = null;
+            // _hasEnteredExecutionArea = false;//TODO: Review this when implement pooling
+            // _hasExecuted = false;
+            //
+            // _notesExecutor = null;
         }
 
         public virtual void Tick(float deltaTime)
@@ -56,7 +56,12 @@ namespace Game.Gameplay.Notes
         public virtual void Execute( bool hasCorrectlyHit)
         {
             _hasExecuted = true;
-            
+
+            if (!hasCorrectlyHit)
+            {
+                return;
+            }
+
             OnNoteExecuted?.Invoke(this);
             
             Destroy(gameObject);
@@ -69,9 +74,9 @@ namespace Game.Gameplay.Notes
             _poolingService.ReturnObjectToPool(poolData.PoolType, gameObject);
         }
 
-        public void SetExecutor(INoteExecutor noteExecutor)
+        public void SetExecutor(INotesExecutor notesExecutor)
         {
-            _noteExecutor = noteExecutor;
+            _notesExecutor = notesExecutor;
         }
         
         public void SetPosition(Vector3 position)

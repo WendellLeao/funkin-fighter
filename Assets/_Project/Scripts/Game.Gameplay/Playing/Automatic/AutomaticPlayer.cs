@@ -1,13 +1,12 @@
 ﻿using Game.Events;
 using UnityEngine;
-using Game.Input;
 
-namespace Game.Gameplay.Playing
+namespace Game.Gameplay.Playing.Automatic
 {
-    public sealed class Player : PlayerBase
+    public sealed class AutomaticPlayer : PlayerBase
     {
-        [SerializeField] private NotesExecutor _notesExecutor;
-
+        [SerializeField] private AutomaticNotesExecutor _notesExecutor;
+        
         public override void Stop()
         {
             base.Stop();
@@ -22,13 +21,13 @@ namespace Game.Gameplay.Playing
             _notesExecutor.Tick(deltaTime);
         }
         
-        public void Begin(IInputService inputService, IEventService eventService, int index)
+        public void Begin(IEventService eventService, int index)
         {
             base.Begin(_notesExecutor, eventService, index);
             
             NotesExecutor = _notesExecutor;
 
-            _notesExecutor.Initialize(inputService, EventService, index);
+            _notesExecutor.Initialize(EventService, index);
         }
     }
 }

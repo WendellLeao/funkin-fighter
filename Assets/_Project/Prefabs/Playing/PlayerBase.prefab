@@ -133,7 +133,7 @@ GameObject:
   - component: {fileID: 213749251531059113}
   - component: {fileID: 7228191219338515509}
   m_Layer: 0
-  m_Name: BasePlayer
+  m_Name: PlayerBase
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -167,10 +167,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9c589907b7fe4d3aa4886cc309c33121, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _playerInputs: {fileID: 712781908490432026}
   _healthController: {fileID: 213749251531059113}
   _damageController: {fileID: 7228191219338515509}
   _animationsController: {fileID: 6573189965697334176}
+  _notesExecutor: {fileID: 712781908490432026}
 --- !u!114 &712781908490432026
 MonoBehaviour:
   m_ObjectHideFlags: 0

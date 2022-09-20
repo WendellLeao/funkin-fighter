@@ -9,6 +9,8 @@ namespace Game.Gameplay.Notes
         [Header("General Settings")]
         public NoteType Type;
         public PoolData PoolData;
+        [Range(0f, 100f)]
+        public float SpawnChance;
         
         [Header("Notes Animation")]
         public float Duration;

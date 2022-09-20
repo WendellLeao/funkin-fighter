@@ -3,9 +3,9 @@ using Game.Events;
 
 namespace Game.Gameplay.Playing
 {
-    public sealed class InputExecutedEvent : ServiceEvent
+    public sealed class NoteExecutedEvent : ServiceEvent
     {
-        public InputExecutedEvent(INoteExecutor executor, Note note, bool hasCorrectlyHit)
+        public NoteExecutedEvent(INotesExecutor executor, Note note, bool hasCorrectlyHit)
         {
             Note = note;
             Executor = executor;
@@ -13,7 +13,7 @@ namespace Game.Gameplay.Playing
         }
         
         public Note Note { get; }
-        public INoteExecutor Executor { get; }
+        public INotesExecutor Executor { get; }
         public bool HasCorrectlyHit { get; }
     }
 }

@@ -14,8 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Type: 2
   PoolData: {fileID: 11400000, guid: 0648ea692a775d34591f8048b4c464cd, type: 2}
+  SpawnChance: 0
   Duration: 9
   EndValue: -50
   AnimationData: {fileID: 11400000, guid: a18d9d088a6e1aa469f0d5779e778db3, type: 2}
-  DamageAbsorption: 30
+  DamageAbsorption: 20
   MustIgnoreDamage: 0
