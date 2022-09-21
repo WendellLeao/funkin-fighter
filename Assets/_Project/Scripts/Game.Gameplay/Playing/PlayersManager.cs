@@ -1,8 +1,6 @@
 ﻿using System.Collections.Generic;
-using Game.Services;
 using UnityEngine;
 using Game.Events;
-using Game.Input;
 
 namespace Game.Gameplay.Playing
 {
@@ -11,21 +9,18 @@ namespace Game.Gameplay.Playing
         [SerializeField] private Transform[] _spawnPoints;
         [SerializeField] private Player _playerPrefab;
         [SerializeField] private Player _automaticPlayerPrefab;
+        [SerializeField, Range(1, 2)] private int _playersAmount = 2;
 
         [Header("(DEBUG)")] 
         [SerializeField] private bool _spawnAutomaticPlayer;
         
         private IEventService _eventService;
-        private IInputService _inputService;
         private List<Player> _activePlayers;
-        private int _playersAmount = 2;
 
         public void Initialize(IEventService eventService)
         {
             _eventService = eventService;
             
-            _inputService = ServiceLocator.GetService<IInputService>();
-
             _activePlayers = new List<Player>();
             
             SpawnPlayers();
@@ -57,7 +52,7 @@ namespace Game.Gameplay.Playing
 
                 player.transform.position = _spawnPoints[index].position;
 
-                FixPlayerScale(index, player);
+                FlipSecondPlayer(index, player);
 
                 player.Begin(_eventService, index);
                 
@@ -77,16 +72,16 @@ namespace Game.Gameplay.Playing
             return _playerPrefab;
         }
 
-        private void FixPlayerScale(int i, Player newPlayer)
+        private void FlipSecondPlayer(int i, Player newPlayer)
         {
             bool isSecondPlayer = i == 1;
 
-            if (!isSecondPlayer)
+            if (isSecondPlayer)
             {
-                return;
+                Vector3 newScale = new Vector3(-1, 1, 1);
+                
+                newPlayer.transform.localScale = newScale;
             }
-            
-            newPlayer.transform.localScale = new Vector3(-1, 1, 1);
         }
     }
 }
