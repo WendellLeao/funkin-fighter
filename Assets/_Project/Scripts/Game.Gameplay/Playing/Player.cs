@@ -1,34 +1,45 @@
-﻿using Game.Events;
+﻿using Game.Gameplay.Animations;
+using Game.Events;
 using UnityEngine;
-using Game.Input;
 
 namespace Game.Gameplay.Playing
 {
-    public sealed class Player : PlayerBase
+    public sealed class Player : Entity
     {
-        [SerializeField] private NotesExecutor _notesExecutor;
-
-        public override void Stop()
+        [SerializeField] private NotesExecutorBase _notesExecutor;
+        [SerializeField] private HealthController _healthController;
+        [SerializeField] private DamageController _damageController;
+        [SerializeField] private AnimationsController _animationsController;
+        
+        private IEventService _eventService;
+        private int _index;
+        
+        public int Index => _index;
+        public INotesExecutor NotesExecutor => _notesExecutor;
+        public HealthController HealthController => _healthController;
+        
+        public void Begin(IEventService eventService, int index)
         {
-            base.Stop();
-            
-            _notesExecutor.Dispose();
-        }
+            _eventService = eventService;
+            _index = index;
 
-        public override void Tick(float deltaTime)
-        {
-            base.Tick(deltaTime);
-            
-            _notesExecutor.Tick(deltaTime);
+            _notesExecutor.Initialize(_eventService, _index);
+            _healthController.Initialize();
+            _damageController.Initialize(_healthController, _eventService, _notesExecutor);
+            _animationsController.Initialize();
         }
         
-        public void Begin(IInputService inputService, IEventService eventService, int index)
+        public void Stop()
         {
-            base.Begin(_notesExecutor, eventService, index);
-            
-            NotesExecutor = _notesExecutor;
+            _notesExecutor.Dispose();
+            _healthController.Dispose();
+            _damageController.Dispose();
+            _animationsController.Dispose();
+        }
 
-            _notesExecutor.Initialize(inputService, EventService, index);
+        public void Tick(float deltaTime)
+        {
+            _notesExecutor.Tick(deltaTime);
         }
     }
 }

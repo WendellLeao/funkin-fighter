@@ -1,5 +1,4 @@
-﻿using Game.Gameplay.Playing.Automatic;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Game.Services;
 using UnityEngine;
 using Game.Events;
@@ -11,14 +10,14 @@ namespace Game.Gameplay.Playing
     {
         [SerializeField] private Transform[] _spawnPoints;
         [SerializeField] private Player _playerPrefab;
-        [SerializeField] private AutomaticPlayer _automaticPlayerPrefab;
+        [SerializeField] private Player _automaticPlayerPrefab;
 
         [Header("(DEBUG)")] 
         [SerializeField] private bool _spawnAutomaticPlayer;
         
         private IEventService _eventService;
         private IInputService _inputService;
-        private List<PlayerBase> _activePlayers;
+        private List<Player> _activePlayers;
         private int _playersAmount = 2;
 
         public void Initialize(IEventService eventService)
@@ -27,14 +26,14 @@ namespace Game.Gameplay.Playing
             
             _inputService = ServiceLocator.GetService<IInputService>();
 
-            _activePlayers = new List<PlayerBase>();
+            _activePlayers = new List<Player>();
             
             SpawnPlayers();
         }
 
         public void Dispose()
         {
-            foreach (PlayerBase activePlayer in _activePlayers)
+            foreach (Player activePlayer in _activePlayers)
             {
                 activePlayer.Stop();
             }
@@ -42,7 +41,7 @@ namespace Game.Gameplay.Playing
 
         public void Tick(float deltaTime)
         {
-            foreach (PlayerBase activePlayer in _activePlayers)
+            foreach (Player activePlayer in _activePlayers)
             {
                 activePlayer.Tick(deltaTime);
             }
@@ -52,38 +51,23 @@ namespace Game.Gameplay.Playing
         {
             for (int index = 0; index < _playersAmount; index++)
             {
-                PlayerBase playerBasePrefab = GetPlayerPrefab(index);
+                Player playerBasePrefab = GetPlayerPrefab(index);
                 
-                PlayerBase playerBase = Instantiate(playerBasePrefab, transform);
+                Player player = Instantiate(playerBasePrefab, transform);
 
-                playerBase.transform.position = _spawnPoints[index].position;
+                player.transform.position = _spawnPoints[index].position;
 
-                FixPlayerScale(index, playerBase);
+                FixPlayerScale(index, player);
 
-                CheckAndBeginPlayer(playerBase, index);
+                player.Begin(_eventService, index);
                 
-                _activePlayers.Add(playerBase);
+                _activePlayers.Add(player);
                 
-                _eventService.DispatchEvent(new PlayerCreatedEvent(playerBase));
+                _eventService.DispatchEvent(new PlayerCreatedEvent(player));
             }
         }
 
-        private void CheckAndBeginPlayer(PlayerBase playerBase, int index)
-        {
-            if (playerBase is Player localPlayer)
-            {
-                localPlayer.Begin(_inputService, _eventService, index);
-                
-                return;
-            }
-            
-            if (playerBase is AutomaticPlayer botPlayer)
-            {
-                botPlayer.Begin(_eventService, index);
-            }
-        }
-
-        private PlayerBase GetPlayerPrefab(int index)
+        private Player GetPlayerPrefab(int index)
         {
             if (_spawnAutomaticPlayer && index > 0)
             {
@@ -93,7 +77,7 @@ namespace Game.Gameplay.Playing
             return _playerPrefab;
         }
 
-        private void FixPlayerScale(int i, PlayerBase newLocalPlayerBase)
+        private void FixPlayerScale(int i, Player newPlayer)
         {
             bool isSecondPlayer = i == 1;
 
@@ -102,7 +86,7 @@ namespace Game.Gameplay.Playing
                 return;
             }
             
-            newLocalPlayerBase.transform.localScale = new Vector3(-1, 1, 1);
+            newPlayer.transform.localScale = new Vector3(-1, 1, 1);
         }
     }
 }

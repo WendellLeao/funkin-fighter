@@ -93,6 +93,8 @@ namespace Game.Gameplay.Notes
             note.OnNoteExecuted -= HandleNoteExecuted;
             
             _activeNotes.Remove(note);
+            
+            Destroy(note.gameObject);
         }
         
         private Note SpawnRandomNote()

@@ -9,14 +9,14 @@ namespace Game.UI.Playing
         [SerializeField] private Image _healthBarImage;
         [SerializeField] private Image _specialBarImage;
 
-        private PlayerBase _playerBase;
+        private Player _player;
         private HealthController _playerHealthController;
 
-        public void Begin(PlayerBase playerBase)
+        public void Begin(Player player)
         {
-            _playerBase = playerBase;
+            _player = player;
 
-            _playerHealthController = _playerBase.HealthController;
+            _playerHealthController = _player.HealthController;
 
             _playerHealthController.OnHealthChanged += HandlePlayerHealthChanged;
         }

@@ -6,7 +6,7 @@ namespace Game.Gameplay.Playing
     public interface INotesExecutor
     {
         public event Action<Note, bool> OnNoteExecuted;
-        public int Index { get; }
+        public int ExecutorID { get; }
         public bool HasAuthority(Note note);
     }
 }

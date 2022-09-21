@@ -4,11 +4,11 @@ namespace Game.Gameplay.Playing
 {
     public sealed class PlayerCreatedEvent : ServiceEvent
     {
-        public PlayerCreatedEvent(PlayerBase playerBase)
+        public PlayerCreatedEvent(Player player)
         {
-            PlayerBase = playerBase;
+            Player = player;
         }
         
-        public PlayerBase PlayerBase { get; }
+        public Player Player { get; }
     }
 }

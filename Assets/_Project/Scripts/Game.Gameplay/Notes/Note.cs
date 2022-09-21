@@ -63,8 +63,6 @@ namespace Game.Gameplay.Notes
             }
 
             OnNoteExecuted?.Invoke(this);
-            
-            Destroy(gameObject);
         }
         
         protected virtual void OnComplete()
